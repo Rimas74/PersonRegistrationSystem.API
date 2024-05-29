@@ -18,7 +18,9 @@ namespace PersonRegistrationSystem.BusinessLogic
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
                 .ForMember(dest => dest.Salt, opt => opt.Ignore())
                 .ForMember(dest => dest.Persons, opt => opt.Ignore())
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => "User"))
                 .ReverseMap();
+
             CreateMap<UserLoginDTO, User>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
                 .ForMember(dest => dest.Salt, opt => opt.Ignore())
