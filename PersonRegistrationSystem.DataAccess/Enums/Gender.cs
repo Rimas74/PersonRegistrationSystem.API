@@ -8,6 +8,7 @@ namespace PersonRegistrationSystem.DataAccess.Enums
 {
     public enum Gender
     {
-
+        Female,
+        Male
     }
 }
