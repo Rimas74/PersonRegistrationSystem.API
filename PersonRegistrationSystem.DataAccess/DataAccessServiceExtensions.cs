@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PersonRegistrationSystem.DataAccess.Interfaces;
+using PersonRegistrationSystem.DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +20,7 @@ namespace PersonRegistrationSystem.DataAccess
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
 
-            //services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             //services.AddScoped<IPersonRepository, PersonRepository>();
             //services.AddScoped<IPlaceOfResidenceRepository, PlaceOfResidenceRepository>();
 
