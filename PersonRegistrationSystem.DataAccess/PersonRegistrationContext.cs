@@ -29,12 +29,14 @@ namespace PersonRegistrationSystem.DataAccess
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Persons)
                 .WithOne(p => p.User)
-                .HasForeignKey(p => p.User.Id);
+                .HasForeignKey(p => p.User.Id)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Person>()
                 .HasOne(p => p.PlaceOfResidence)
                 .WithOne(pr => pr.Person)
-                .HasForeignKey<PlaceOfResidence>(pr => pr.PersonId);
+                .HasForeignKey<PlaceOfResidence>(pr => pr.PersonId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<PlaceOfResidence>()
                 .HasOne(pr => pr.Person)
