@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PersonRegistrationSystem.BusinessLogic;
 using PersonRegistrationSystem.DataAccess;
-
+using Serilog;
 using System.Text;
 
 namespace PersonRegistrationSystem.API
@@ -16,6 +16,11 @@ namespace PersonRegistrationSystem.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            Log.Logger = new LoggerConfiguration()
+               .ReadFrom.Configuration(builder.Configuration)
+               .CreateLogger();
+            builder.Host.UseSerilog();
+
             builder.Services.AddDbContext<PersonRegistrationContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
