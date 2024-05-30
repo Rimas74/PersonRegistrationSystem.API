@@ -17,7 +17,8 @@ namespace PersonRegistrationSystem.DataAccess
         {
 
             services.AddDbContext<PersonRegistrationContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+             sqlOptions => sqlOptions.MigrationsAssembly("PersonRegistrationSystem.DataAccess")));
 
 
             services.AddScoped<IUserRepository, UserRepository>();

@@ -18,10 +18,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Controllers\" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\PersonRegistrationSystem.BusinessLogic\PersonRegistrationSystem.BusinessLogic.csproj" />
 		<ProjectReference Include="..\PersonRegistrationSystem.Common\PersonRegistrationSystem.Common.csproj" />
 		<ProjectReference Include="..\PersonRegistrationSystem.DataAccess\PersonRegistrationSystem.DataAccess.csproj" />

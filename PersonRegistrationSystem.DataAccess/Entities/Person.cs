@@ -51,5 +51,6 @@ namespace PersonRegistrationSystem.DataAccess.Entities
         public User User { get; set; }
 
         public PlaceOfResidence PlaceOfResidence { get; set; }
+        public int PlaceOfResidenceId { get; set; }
     }
 }

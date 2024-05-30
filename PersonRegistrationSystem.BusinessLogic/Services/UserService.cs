@@ -55,7 +55,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
 
 
 
-        public async Task<UserDTO> DeleteUSerAsync(int userId)
+        public async Task<UserDTO> DeleteUserAsync(int userId)
         {
             var user = await _userRepository.GetByIdAsync(userId);
             if (user == null)
@@ -66,6 +66,11 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             return _mapper.Map<UserDTO>(user);
         }
 
+        public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<UserDTO>>(users);
+        }
 
         private void CreatePasswordHash(string password, User user)
         {
@@ -95,5 +100,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             var storedHashBytes = Convert.FromBase64String(storedHash);
             return computedHash.SequenceEqual(storedHashBytes);
         }
+
+
     }
 }

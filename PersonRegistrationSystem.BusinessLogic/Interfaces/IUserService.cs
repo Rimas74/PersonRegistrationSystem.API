@@ -11,6 +11,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Interfaces
     {
         Task<UserDTO> RegisterUserAsync(UserRegisterDTO userRegisterDTO);
         Task<TokenDTO> LoginUserAsync(UserLoginDTO userLoginDTO);
-        Task<UserDTO> DeleteUSerAsync(int userId);
+        Task<UserDTO> DeleteUserAsync(int userId);
+        Task<IEnumerable<UserDTO>> GetAllUsersAsync();
     }
 }
