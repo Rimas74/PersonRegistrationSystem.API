@@ -29,8 +29,13 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
                 new Claim(ClaimTypes.Role, role)
             };
 
-            var secretToken = _configuration["Jwt:Key"];
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretToken));
+            var secretKey = _configuration["Jwt:Key"];
+            if (string.IsNullOrEmpty(secretKey) || secretKey.Length < 64)
+            {
+                throw new ArgumentException("The JWT key must be at least 64 characters long.");
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var token = new JwtSecurityToken(

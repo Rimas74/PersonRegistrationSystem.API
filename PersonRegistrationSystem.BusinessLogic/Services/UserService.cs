@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using PersonRegistrationSystem.DataAccess.Helpers;
 
 namespace PersonRegistrationSystem.BusinessLogic.Services
 {
@@ -36,7 +37,11 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
 
             var user = _mapper.Map<User>(userRegisterDTO);
 
-            CreatePasswordHash(userRegisterDTO.Password, user);
+            var (passwordHash, salt) = PasswordHasher.CreatePasswordHash(userRegisterDTO.Password);
+            
+
+            user.PasswordHash = passwordHash;
+            user.Salt = salt;
 
             await _userRepository.AddAsync(user);
 
@@ -72,12 +77,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             return _mapper.Map<IEnumerable<UserDTO>>(users);
         }
 
-        private void CreatePasswordHash(string password, User user)
-        {
-            using var hmack = new HMACSHA512();
-            user.Salt = Convert.ToBase64String(hmack.Key);
-            user.PasswordHash = Convert.ToBase64String(hmack.ComputeHash(Encoding.UTF8.GetBytes(password)));
-        }
+        
 
         private void ValidateUserCredentials(User user, string password)
         {
@@ -86,21 +86,16 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
                 throw new UnauthorizedAccessException("Invalid username.");
 
             }
-            if (!VerifyPassword(password, user.PasswordHash, user.Salt))
+
+            bool isPasswordValid = PasswordHasher.VerifyPassword(password, user.PasswordHash, user.Salt);
+
+            if (!isPasswordValid)
             {
                 throw new UnauthorizedAccessException("Invalid password.");
             }
         }
 
-        private bool VerifyPassword(string password, string storedHash, string storedSalt)
-        {
-            var saltBytes = Convert.FromBase64String(storedSalt);
-            using var hmack = new HMACSHA512(saltBytes);
-            var computedHash = hmack.ComputeHash(Encoding.UTF8.GetBytes(password));
-            var storedHashBytes = Convert.FromBase64String(storedHash);
-            return computedHash.SequenceEqual(storedHashBytes);
-        }
-
+        
 
     }
 }

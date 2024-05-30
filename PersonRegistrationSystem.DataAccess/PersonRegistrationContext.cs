@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PersonRegistrationSystem.DataAccess.Entities;
+using PersonRegistrationSystem.DataAccess.Helpers;
 
 namespace PersonRegistrationSystem.DataAccess
 {
@@ -31,12 +32,14 @@ namespace PersonRegistrationSystem.DataAccess
                 .HasForeignKey<PlaceOfResidence>(pr => pr.PersonId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            var (passwordHash, salt) = PasswordHasher.CreatePasswordHash("AdminPassword");
+
             modelBuilder.Entity<User>().HasData(new User
             {
                 Id = 1,
                 Username = "admin",
-                PasswordHash = "AdminPasword",
-                Salt = "salt",
+                PasswordHash = passwordHash,
+                Salt = salt,
                 Role = "Admin"
             });
         }

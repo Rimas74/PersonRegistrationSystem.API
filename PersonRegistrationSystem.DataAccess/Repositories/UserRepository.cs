@@ -48,7 +48,7 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
 
         public async Task<User> GetByUsernameAsync(string username)
         {
-            return await _context.Users.FindAsync(username);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
         public async Task UpdateAsync(User user)
