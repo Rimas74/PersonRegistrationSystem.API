@@ -22,7 +22,7 @@ namespace PersonRegistrationSystem.API
             builder.Host.UseSerilog();
 
             builder.Services.AddDbContext<PersonRegistrationContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
             var issuer = builder.Configuration["Jwt:Issuer"];

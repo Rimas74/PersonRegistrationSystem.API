@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonRegistrationSystem.API", "PersonRegistrationSystem.API\PersonRegistrationSystem.API.csproj", "{F0BDF055-823C-4723-991B-9EC36B47A720}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonRegistrationSystem.API", "PersonRegistrationSystem.API\PersonRegistrationSystem.API.csproj", "{F0BDF055-823C-4723-991B-9EC36B47A720}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonRegistrationSystem.BusinessLogic", "PersonRegistrationSystem.BusinessLogic\PersonRegistrationSystem.BusinessLogic.csproj", "{8E9E918D-D493-4E44-A556-8291E5BA3E09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonRegistrationSystem.BusinessLogic", "PersonRegistrationSystem.BusinessLogic\PersonRegistrationSystem.BusinessLogic.csproj", "{8E9E918D-D493-4E44-A556-8291E5BA3E09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonRegistrationSystem.Common", "PersonRegistrationSystem.Common\PersonRegistrationSystem.Common.csproj", "{B9195A1B-7832-4A20-BC46-364378476975}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonRegistrationSystem.Common", "PersonRegistrationSystem.Common\PersonRegistrationSystem.Common.csproj", "{B9195A1B-7832-4A20-BC46-364378476975}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonRegistrationSystem.DataAccess", "PersonRegistrationSystem.DataAccess\PersonRegistrationSystem.DataAccess.csproj", "{CF6FC543-117E-42C7-A3A0-36B90E147D33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonRegistrationSystem.DataAccess", "PersonRegistrationSystem.DataAccess\PersonRegistrationSystem.DataAccess.csproj", "{CF6FC543-117E-42C7-A3A0-36B90E147D33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestDataAccess", "UnitTestDataAccess\UnitTestDataAccess.csproj", "{D154A9B7-94C6-4A5D-AE7D-4FEEFB4DD298}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{CF6FC543-117E-42C7-A3A0-36B90E147D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF6FC543-117E-42C7-A3A0-36B90E147D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF6FC543-117E-42C7-A3A0-36B90E147D33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D154A9B7-94C6-4A5D-AE7D-4FEEFB4DD298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D154A9B7-94C6-4A5D-AE7D-4FEEFB4DD298}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D154A9B7-94C6-4A5D-AE7D-4FEEFB4DD298}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D154A9B7-94C6-4A5D-AE7D-4FEEFB4DD298}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

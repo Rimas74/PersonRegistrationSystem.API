@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PersonRegistrationSystem.BusinessLogic.Interfaces;
 using PersonRegistrationSystem.DataAccess.Entities;
@@ -15,14 +16,16 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
-
-        public TokenService(IConfiguration configuration)
+        private readonly ILogger<TokenService> _logger;
+        public TokenService(IConfiguration configuration, ILogger<TokenService> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         public string GenerateToken(string username, string role)
         {
+            _logger.LogInformation($"Generating token for user: {username}");
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, username),
@@ -32,6 +35,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             var secretKey = _configuration["Jwt:Key"];
             if (string.IsNullOrEmpty(secretKey) || secretKey.Length < 64)
             {
+                _logger.LogError("The JWT key is either null or too short.");
                 throw new ArgumentException("The JWT key must be at least 64 characters long.");
             }
 
@@ -45,6 +49,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
                expires: DateTime.Now.AddDays(10),
                signingCredentials: creds);
 
+            _logger.LogInformation($"Token generated successfully for user: {username}");
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
