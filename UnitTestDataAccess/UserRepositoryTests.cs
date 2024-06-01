@@ -20,16 +20,15 @@ namespace UnitTestDataAccess
         private UserRepository _userRepository;
         private Mock<ILogger<UserRepository>> _mockLogger;
 
-        public UserRepositoryTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
+
 
         public async Task InitializeAsync()
         {
             _mockLogger = new Mock<ILogger<UserRepository>>();
             _context = await GetDatabaseContext();
             _userRepository = new UserRepository(_context, _mockLogger.Object);
+
+            SeedData();
         }
 
         private async Task<PersonRegistrationContext> GetDatabaseContext()
@@ -43,41 +42,33 @@ namespace UnitTestDataAccess
             context.Users.RemoveRange(context.Users);
             await context.SaveChangesAsync();
 
-            if (!context.Users.Any())
-            {
-                var users = new List<User>
-                {
-                    new User
-                    {
-                        Id = 1,
-                        Username = "user1",
-                        PasswordHash = "hashedpassword1",
-                        Salt = "salt1",
-                        Role = "User"
-                    },
-                    new User
-                    {
-                        Id = 2,
-                        Username = "user2",
-                        PasswordHash = "hashedpassword2",
-                        Salt = "salt2",
-                        Role = "Admin"
-                    }
-                };
-
-                await context.Users.AddRangeAsync(users);
-                await context.SaveChangesAsync();
-            }
-
-            // Log the seeded users
-            var allUsers = await context.Users.ToListAsync();
-            _output.WriteLine("Seeded Users:");
-            foreach (var user in allUsers)
-            {
-                _output.WriteLine($"Id: {user.Id}, Username: {user.Username}, Role: {user.Role}");
-            }
-
             return context;
+        }
+
+        private async Task SeedData()
+        {
+            var users = new List<User>
+            {
+                new User
+                {
+                    Id = 1,
+                    Username = "user1",
+                    PasswordHash = "hashedpassword1",
+                    Salt = "salt1",
+                    Role = "User"
+                },
+                new User
+                {
+                    Id = 2,
+                    Username = "user2",
+                    PasswordHash = "hashedpassword2",
+                    Salt = "salt2",
+                    Role = "Admin"
+                }
+            };
+
+            await _context.Users.AddRangeAsync(users);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DisposeAsync()
@@ -142,12 +133,6 @@ namespace UnitTestDataAccess
             // Act
             var users = await _userRepository.GetAllAsync();
 
-            // Log the users retrieved
-            _output.WriteLine("Retrieved Users:");
-            foreach (var user in users)
-            {
-                _output.WriteLine($"Id: {user.Id}, Username: {user.Username}, Role: {user.Role}");
-            }
 
             // Assert
             Assert.NotNull(users);
@@ -198,3 +183,4 @@ namespace UnitTestDataAccess
         }
     }
 }
+

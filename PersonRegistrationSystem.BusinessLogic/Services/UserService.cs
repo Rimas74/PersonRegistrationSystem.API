@@ -70,7 +70,6 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
         }
 
 
-
         public async Task<UserDTO> DeleteUserAsync(int userId)
         {
             _logger.LogInformation($"Deleting user with ID: {userId}");
