@@ -49,19 +49,19 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            _logger.LogInformation("Getting all users");
+            _logger.LogInformation("Getting all users from database.");
             return await _context.Users.ToListAsync();
         }
 
         public async Task<User> GetByIdAsync(int userId)
         {
-            _logger.LogInformation($"Getting user by ID: {userId}");
+            _logger.LogInformation($"From database getting user by ID: {userId} from database.");
             return await _context.Users.FindAsync(userId);
         }
 
         public async Task<User> GetByUsernameAsync(string username)
         {
-            _logger.LogInformation($"Getting user by username: {username}");
+            _logger.LogInformation($"From database getting user by username: {username}.");
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 

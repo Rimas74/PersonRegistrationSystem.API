@@ -93,7 +93,6 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
         }
 
 
-
         private void ValidateUserCredentials(User user, string password)
         {
             if (user == null)

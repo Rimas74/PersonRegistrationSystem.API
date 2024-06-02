@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PersonRegistrationSystem.BusinessLogic.Interfaces;
 using PersonRegistrationSystem.Common.DTOs;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PersonRegistrationSystem.API.Controllers
 {
@@ -45,7 +47,6 @@ namespace PersonRegistrationSystem.API.Controllers
             try
             {
                 var tokenDTO = await _userService.LoginUserAsync(userLoginDTO);
-
                 return Ok(tokenDTO);
             }
             catch (UnauthorizedAccessException ex)
@@ -59,6 +60,11 @@ namespace PersonRegistrationSystem.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
+            if (!User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
             _logger.LogInformation("Getting all users");
             try
             {
@@ -70,13 +76,17 @@ namespace PersonRegistrationSystem.API.Controllers
                 _logger.LogError(ex, "Error getting all users");
                 return BadRequest(ex.Message);
             }
-
         }
 
         [HttpDelete("{userId}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int userId)
         {
+            if (!User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
             _logger.LogInformation($"Deleting user with ID: {userId}");
             try
             {
@@ -89,6 +99,5 @@ namespace PersonRegistrationSystem.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }
