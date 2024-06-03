@@ -19,8 +19,6 @@ namespace PersonRegistrationSystem.DataAccess.Entities
         [Required]
         [StringLength(100, ErrorMessage = "Street name is too long.")]
         [RegularExpression(@"^[a-zA-Z]+(?:\s[a-zA-Z]+)+$", ErrorMessage = "Street name must contain at least one space and can only contain letters and spaces.")]
-
-
         public string Street { get; set; }
 
         [Required]
