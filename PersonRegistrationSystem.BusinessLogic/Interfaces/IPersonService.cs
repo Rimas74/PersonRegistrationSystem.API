@@ -13,7 +13,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Interfaces
         Task<PersonDTO> UpdatePersonAsync(int personId, PersonUpdateDTO personUpdateDTO);
         Task<bool> DeletePersonAsync(int personId);
 
-        Task<IEnumerable<PersonDTO>> GetAllPersonsAsync();
-        Task<PersonDTO> GetPersonById(int personId);
+        Task<IEnumerable<PersonDTO>> GetAllPersonsByUserIdAsync(int userId);
+        Task<PersonDTO> GetPersonByIdAsync(int userId, int personId);
     }
 }

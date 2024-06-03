@@ -63,7 +63,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             var user = await _userRepository.GetByUsernameAsync(userLoginDTO.Username);
             ValidateUserCredentials(user, userLoginDTO.Password);
 
-            var token = _tokenService.GenerateToken(user.Username, user.Role);
+            var token = _tokenService.GenerateToken(user.Username, user.Role, user.Id);
 
             _logger.LogInformation($"User {userLoginDTO.Username} logged in successfully.");
             return new TokenDTO { Token = token };

@@ -23,13 +23,14 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             _logger = logger;
         }
 
-        public string GenerateToken(string username, string role)
+        public string GenerateToken(string username, string role, int userId)
         {
             _logger.LogInformation($"Generating token for user: {username}");
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
             };
 
             var secretKey = _configuration["Jwt:Key"];

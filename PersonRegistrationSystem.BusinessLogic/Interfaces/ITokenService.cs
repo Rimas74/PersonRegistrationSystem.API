@@ -8,6 +8,6 @@ namespace PersonRegistrationSystem.BusinessLogic.Interfaces
 {
     public interface ITokenService
     {
-        string GenerateToken(string username, string role);
+        string GenerateToken(string username, string role, int userId);
     }
 }

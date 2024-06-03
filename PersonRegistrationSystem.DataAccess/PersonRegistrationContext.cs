@@ -32,12 +32,12 @@ namespace PersonRegistrationSystem.DataAccess
                 .HasForeignKey<PlaceOfResidence>(pr => pr.PersonId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            var (passwordHash, salt) = PasswordHasher.CreatePasswordHash("admin");
+            var (passwordHash, salt) = PasswordHasher.CreatePasswordHash("AdminPassword2");
 
             modelBuilder.Entity<User>().HasData(new User
             {
-                Id = 1,
-                Username = "admin",
+                Id = 3,
+                Username = "admin2",
                 PasswordHash = passwordHash,
                 Salt = salt,
                 Role = "Admin"

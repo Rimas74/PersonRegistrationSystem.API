@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonRegistrationSystem.DataAccess;
 
@@ -11,9 +12,11 @@ using PersonRegistrationSystem.DataAccess;
 namespace PersonRegistrationSystem.DataAccess.Migrations
 {
     [DbContext(typeof(PersonRegistrationContext))]
-    partial class PersonRegistrationContextModelSnapshot : ModelSnapshot
+    [Migration("20240603155830_changes2")]
+    partial class changes2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,9 +151,9 @@ namespace PersonRegistrationSystem.DataAccess.Migrations
                         new
                         {
                             Id = 3,
-                            PasswordHash = "9MQDXWayovxrpeV5B/PUwdQHxyMDiPZQukmU6Ak1EoyIiKR+drEOV9TMWdR/vmTeoDz+Vk6zUeisYzqcy5mDtg==",
+                            PasswordHash = "lo4dWxddp0oyU2Lq/TP3F2zUJV1Rs1VitXss7a9IQBACRYQbe40WUc1hrC1dyWN09gl7D+GamH+0vCmksYyKFA==",
                             Role = "Admin",
-                            Salt = "pCj/sAMQtu91s205YcqL9DnnI6HMsXKqNTw1XtZJ29ORyIDdJ7vKPyu8eqX74t+6tPxCIRuKg/9xhepvmnq2Qd+zSC5SRyrMXIMALRMNvRv6lxPQTu05EEO4HrodPovfPuOD13ShLdmy4QJI/UYt/epPFOc37y27hc5CXCNqBQU=",
+                            Salt = "i8TEJ/uf+b2yXIfLzZNpzoTMxLxqB73t30bEPHMRM987xB6tysHN4oJs1W4MFXV4SQWC8k8XoK+3tKAHmp+bR5g+1jiBX6oHkU1k8mT1NtVEKk7kEsXrgupDC6EBzGZllzqbkIKK/pUqTh+W5d1P/R1J3pGPttLnGtvy6bfNyeE=",
                             Username = "admin2"
                         });
                 });
