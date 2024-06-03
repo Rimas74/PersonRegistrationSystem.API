@@ -83,8 +83,8 @@ namespace UnitTestAPI
 
             _userDTOs = new List<UserDTO>
             {
-                new UserDTO { Id = 1, Username = "user1", Role = "User" },
-                new UserDTO { Id = 2, Username = "user2", Role = "Admin" }
+                new UserDTO { Id = 1, Username = "user1"},
+                new UserDTO { Id = 2, Username = "user2",}
             };
 
             await _context.Users.AddRangeAsync(_users);
@@ -116,7 +116,7 @@ namespace UnitTestAPI
         {
             // Arrange
             var userRegisterDTO = new UserRegisterDTO { Username = "user3", Password = "Password123!@#" };
-            var userDTO = new UserDTO { Id = 3, Username = "user3", Role = "User" };
+            var userDTO = new UserDTO { Id = 3, Username = "user3" };
 
             _mockUserService.Setup(service => service.RegisterUserAsync(It.IsAny<UserRegisterDTO>())).ReturnsAsync(userDTO);
 

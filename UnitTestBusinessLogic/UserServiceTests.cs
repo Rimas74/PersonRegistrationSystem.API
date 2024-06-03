@@ -86,8 +86,8 @@ namespace UnitTestBusinessLogic
 
             _userDTOs = new List<UserDTO>
             {
-                new UserDTO { Id = 1, Username = "user1", Role = "User" },
-                new UserDTO { Id = 2, Username = "user2", Role = "Admin" }
+                new UserDTO { Id = 1, Username = "user1" },
+                new UserDTO { Id = 2, Username = "user2" }
             };
 
             await _context.Users.AddRangeAsync(_users);
@@ -107,7 +107,7 @@ namespace UnitTestBusinessLogic
             var userRegisterDTO = new UserRegisterDTO { Username = "user3", Password = "Password123!@#" };
             var (passwordHash, salt) = PasswordHasher.CreatePasswordHash("Password123!@#");
             var newUser = new User { Id = 3, Username = "user3", PasswordHash = passwordHash, Salt = salt, Role = "User" };
-            var userDTO = new UserDTO { Id = 3, Username = "user3", Role = "User" };
+            var userDTO = new UserDTO { Id = 3, Username = "user3" };
 
             _mockUserRepository.Setup(repo => repo.GetByUsernameAsync(It.IsAny<string>())).ReturnsAsync((User)null);
             _mockUserRepository.Setup(repo => repo.AddAsync(It.IsAny<User>())).Returns(Task.CompletedTask);
