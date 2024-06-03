@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PersonRegistrationSystem.BusinessLogic.Interfaces;
 using PersonRegistrationSystem.Common.DTOs;
+using PersonRegistrationSystem.DataAccess.Entities;
+using PersonRegistrationSystem.DataAccess.Helpers;
 using PersonRegistrationSystem.DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -25,10 +27,31 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             _logger = logger;
         }
 
-        public Task<PersonDTO> CreatePersonAsync(PersonCreateDTO personCreateDTO)
+        public async Task<PersonDTO> CreatePersonAsync(int userId, PersonCreateDTO personCreateDTO)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation($"Creating person for user ID: {userId}");
+
+            if (!PersonalCodeValidator.Validate(personCreateDTO.PersonalCode))
+            {
+                throw new ArgumentException("Invalid Personal Identification Code.");
+            }
+
+            var person = _mapper.Map<Person>(personCreateDTO);
+            person.UserId = userId;
+
+            if (personCreateDTO.ProfilePhoto != null)
+            {
+                var filePath = Path.Combine("PersonPhoto", $"{DateTime.Now:yyyyMMddHHmmss}.jpg");
+                ImageHelper.SaveResizedImage(filePath, personCreateDTO.ProfilePhoto, 200, 200);
+                person.ProfilePhotoPath = filePath;
+            }
+
+            await _personRepository.CreateAsync(person);
+
+            _logger.LogInformation($"Person created for user ID: {userId}");
+            return _mapper.Map<PersonDTO>(person);
         }
+
 
         public Task<bool> DeletePersonAsync(int personId)
         {

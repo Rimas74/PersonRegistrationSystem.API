@@ -9,7 +9,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Interfaces
 {
     public interface IPersonService
     {
-        Task<PersonDTO> CreatePersonAsync(PersonCreateDTO personCreateDTO);
+        Task<PersonDTO> CreatePersonAsync(int userId, PersonCreateDTO personCreateDTO);
         Task<PersonDTO> UpdatePersonAsync(int personId, PersonUpdateDTO personUpdateDTO);
         Task<bool> DeletePersonAsync(int personId);
 

@@ -21,9 +21,12 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
             _logger = logger;
         }
 
-        public Task AddAsync(Person person)
+        public async Task CreateAsync(Person person)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation($"Adding person for user ID: {person.UserId}");
+            await _context.Persons.AddAsync(person);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Person added for user ID: {person.UserId}");
         }
 
         public Task DeleteAsync(int id)

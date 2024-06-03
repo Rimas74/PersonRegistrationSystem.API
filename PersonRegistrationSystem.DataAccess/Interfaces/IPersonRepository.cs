@@ -11,7 +11,7 @@ namespace PersonRegistrationSystem.DataAccess.Interfaces
     {
         Task<IEnumerable<Person>> GetAllPersonsByUserIdAsync(int userId);
         Task<Person> GetByIdAsync(int id);
-        Task AddAsync(Person person);
+        Task CreateAsync(Person person);
         Task UpdateAsync(Person person);
         Task DeleteAsync(int id);
     }

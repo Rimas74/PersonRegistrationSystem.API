@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PersonRegistrationSystem.BusinessLogic.Interfaces;
+using PersonRegistrationSystem.Common.DTOs;
 using System.Security.Claims;
 
 namespace PersonRegistrationSystem.API.Controllers
@@ -41,7 +42,7 @@ namespace PersonRegistrationSystem.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+
         public async Task<IActionResult> GetPersonById(int id)
         {
             var userId = GetUserIdFromClaims();
@@ -65,6 +66,32 @@ namespace PersonRegistrationSystem.API.Controllers
                 return StatusCode(500, "Internal server error.");
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePerson([FromForm] PersonCreateDTO personCreateDTO)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                var createdPerson = await _personService.CreatePersonAsync(userId.Value, personCreateDTO);
+                return CreatedAtAction(nameof(GetPersonById), new { id = createdPerson.Id }, createdPerson);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding the person.");
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
 
         private int? GetUserIdFromClaims()
         {
