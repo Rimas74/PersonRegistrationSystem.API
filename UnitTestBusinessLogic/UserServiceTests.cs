@@ -131,7 +131,7 @@ namespace UnitTestBusinessLogic
             var tokenDTO = new TokenDTO { Token = "token" };
 
             _mockUserRepository.Setup(repo => repo.GetByUsernameAsync(It.IsAny<string>())).ReturnsAsync(user);
-            _mockTokenService.Setup(service => service.GenerateToken(It.IsAny<string>(), It.IsAny<string>())).Returns("token");
+            _mockTokenService.Setup(service => service.GenerateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns("token");
 
             // Act
             var result = await _userService.LoginUserAsync(userLoginDTO);

@@ -46,6 +46,9 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
                 person.ProfilePhotoPath = filePath;
             }
 
+            var placeOfResidence = _mapper.Map<PlaceOfResidence>(personCreateDTO.PlaceOfResidence);
+            person.PlaceOfResidence = placeOfResidence;
+
             await _personRepository.CreateAsync(person);
 
             _logger.LogInformation($"Person created for user ID: {userId}");

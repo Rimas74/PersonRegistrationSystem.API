@@ -23,10 +23,16 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
 
         public async Task CreateAsync(Person person)
         {
-            _logger.LogInformation($"Adding person for user ID: {person.UserId}");
+            _logger.LogInformation($"Creating person for user ID: {person.UserId} to the database.");
+
+            if (person.PlaceOfResidence != null)
+            {
+                _context.PlacesOfResidence.Add(person.PlaceOfResidence);
+            }
+
             await _context.Persons.AddAsync(person);
             await _context.SaveChangesAsync();
-            _logger.LogInformation($"Person added for user ID: {person.UserId}");
+            _logger.LogInformation($"Person added for user ID: {person.UserId} to the database.");
         }
 
         public Task DeleteAsync(int id)
@@ -36,7 +42,7 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
 
         public async Task<IEnumerable<Person>> GetAllPersonsByUserIdAsync(int userId)
         {
-            _logger.LogInformation("Retrieving all persons for user ID: {UserId}", userId);
+            _logger.LogInformation($"Retrieving all persons for user ID: {userId} from the database.");
             return await _context.Persons
                 .Include(p => p.PlaceOfResidence)
                 .Where(p => p.UserId == userId)
@@ -45,7 +51,7 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
 
         public async Task<Person> GetByIdAsync(int id)
         {
-            _logger.LogInformation("Retrieving person with ID: {Id} from the database.", id);
+            _logger.LogInformation($"Retrieving person with ID: {id} from the database.");
             return await _context.Persons
                 .Include(p => p.PlaceOfResidence)
                 .FirstOrDefaultAsync(p => p.Id == id);

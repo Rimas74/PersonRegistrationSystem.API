@@ -25,4 +25,8 @@
 		<ProjectReference Include="..\PersonRegistrationSystem.DataAccess\PersonRegistrationSystem.DataAccess.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="PersonPhoto\" />
+	</ItemGroup>
+
 </Project>

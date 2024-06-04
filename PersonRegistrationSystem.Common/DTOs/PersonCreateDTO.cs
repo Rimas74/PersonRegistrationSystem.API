@@ -24,6 +24,7 @@ namespace PersonRegistrationSystem.Common.DTOs
         public string Gender { get; set; }
 
         [Required]
+        [DisplayFormat(DataFormatString = "{0:yyyy MMM dd}")]
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
 
@@ -40,9 +41,10 @@ namespace PersonRegistrationSystem.Common.DTOs
         public string Email { get; set; }
 
         [Required]
+        [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
         public IFormFile ProfilePhoto { get; set; }
 
         [Required]
-        public PlaceOfResidenceDTO PlaceOfResidence { get; set; }
+        public PlaceOfResidenceCreateDTO PlaceOfResidence { get; set; }
     }
 }

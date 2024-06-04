@@ -8,6 +8,11 @@ public static class ImageHelper
 {
     public static void SaveResizedImage(string filePath, IFormFile imageFile, int width, int height)
     {
+        var directory = Path.GetDirectoryName(filePath);
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
         using (var stream = new MemoryStream())
         {
             imageFile.CopyTo(stream);

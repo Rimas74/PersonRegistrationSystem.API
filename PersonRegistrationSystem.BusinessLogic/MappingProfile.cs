@@ -40,6 +40,8 @@ namespace PersonRegistrationSystem.BusinessLogic
             CreateMap<PlaceOfResidenceUpdateDTO, PlaceOfResidence>()
                 .ForMember(dest => dest.Person, opt => opt.Ignore())
                 .ReverseMap();
+            CreateMap<PlaceOfResidenceCreateDTO, PlaceOfResidence>()
+               .ReverseMap();
         }
     }
 }
