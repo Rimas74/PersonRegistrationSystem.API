@@ -43,5 +43,6 @@ namespace PersonRegistrationSystem.DataAccess
                 Role = "Admin"
             });
         }
+
     }
 }

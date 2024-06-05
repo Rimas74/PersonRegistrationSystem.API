@@ -31,15 +31,23 @@ namespace PersonRegistrationSystem.API.Controllers
             }
             try
             {
+                _logger.LogInformation($"Retrieving persons for user ID: {userId.Value}");
                 var persons = await _personService.GetAllPersonsByUserIdAsync(userId.Value);
-                return Ok();
+
+                if (persons == null || !persons.Any())
+                {
+                    _logger.LogInformation($"No persons found for user ID: {userId.Value}");
+                    return Ok("No persons found.");
+                }
+                return Ok(persons);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occured while retrieving users with id ={userId} all persons.");
+                _logger.LogError(ex, $"An error occurred while retrieving persons for user ID: {userId.Value}");
                 return StatusCode(500, "Internal server error.");
             }
         }
+
 
         [HttpGet("{id}")]
 
@@ -92,6 +100,30 @@ namespace PersonRegistrationSystem.API.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePerson(int id)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                var deletedPerson = await _personService.DeletePersonAsync(userId.Value, id);
+                return Ok(deletedPerson);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the person.");
+                return StatusCode(500, "Internal server error.");
+            }
+        }
 
         private int? GetUserIdFromClaims()
         {

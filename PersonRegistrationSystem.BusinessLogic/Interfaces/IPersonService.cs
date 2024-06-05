@@ -11,7 +11,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Interfaces
     {
         Task<PersonDTO> CreatePersonAsync(int userId, PersonCreateDTO personCreateDTO);
         Task<PersonDTO> UpdatePersonAsync(int personId, PersonUpdateDTO personUpdateDTO);
-        Task<bool> DeletePersonAsync(int personId);
+        Task<PersonDTO> DeletePersonAsync(int userId, int personId);
 
         Task<IEnumerable<PersonDTO>> GetAllPersonsByUserIdAsync(int userId);
         Task<PersonDTO> GetPersonByIdAsync(int userId, int personId);

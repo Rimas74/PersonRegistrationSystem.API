@@ -17,7 +17,6 @@ namespace PersonRegistrationSystem.DataAccess.Entities
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name can only contain letters and spaces.")]
         public string Name { get; set; }
 
-
         [Required]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Last Name must be between 2 and 50 characters.")]
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name can only contain letters and spaces.")]
@@ -51,6 +50,5 @@ namespace PersonRegistrationSystem.DataAccess.Entities
         public User User { get; set; }
 
         public PlaceOfResidence PlaceOfResidence { get; set; }
-        public int PlaceOfResidenceId { get; set; }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using PersonRegistrationSystem.DataAccess.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PersonRegistrationSystem.DataAccess.Interfaces
@@ -12,7 +9,9 @@ namespace PersonRegistrationSystem.DataAccess.Interfaces
         Task<IEnumerable<Person>> GetAllPersonsByUserIdAsync(int userId);
         Task<Person> GetByIdAsync(int id);
         Task CreateAsync(Person person);
+        Task CreatePlaceOfResidenceAsync(PlaceOfResidence placeOfResidence);
         Task UpdateAsync(Person person);
         Task DeleteAsync(int id);
+        Task<bool> ExistsAsync(string personalCode);
     }
 }

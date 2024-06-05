@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonRegistrationSystem.DataAccess;
 
@@ -11,9 +12,11 @@ using PersonRegistrationSystem.DataAccess;
 namespace PersonRegistrationSystem.DataAccess.Migrations
 {
     [DbContext(typeof(PersonRegistrationContext))]
-    partial class PersonRegistrationContextModelSnapshot : ModelSnapshot
+    [Migration("20240605072246_changes6")]
+    partial class changes6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,6 +56,9 @@ namespace PersonRegistrationSystem.DataAccess.Migrations
                     b.Property<string>("PersonalCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlaceOfResidenceId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProfilePhotoPath")
                         .IsRequired()
@@ -145,9 +151,9 @@ namespace PersonRegistrationSystem.DataAccess.Migrations
                         new
                         {
                             Id = 3,
-                            PasswordHash = "A3wkPKToiOmlTGody724a8/9zfTjoxjkTVg/R3iouZ+UkRj5Ei7cxuN5Hhv7r+HoqeuJqigJ64/et5SYL/y3mQ==",
+                            PasswordHash = "7/zauvD4+425b/v3osnjo7MK1bj4epz8aBzOxywyoWcGdIazC6iy6lmDnchwHYalBK9lDR3Lu/yg444R3NZekA==",
                             Role = "Admin",
-                            Salt = "GCg5RG6OII9Z+Mn88LxYaHDcWb00xjb/HabrzSGnNgE0YMgT4a4EHxgsazqcDTwMBELTkG0ubS21cpKAsILmC4aXwe56vl3l3BHzIxLVPouvsVpsi1z5obVLk5ezdv7hxmTINsu6lWnzqan01CldUwebVk3X4h9OJzDzbZj9IAo=",
+                            Salt = "atAT88oJb3bj8bWjL5jRzkthFLq/qWBS2WiJlBUkJNj6UFnMzI0p6aG73M/s+zkSvmP32kZfIzxmkGx/vvZ9BthVmrotXj3Kq9VBPsY2rwG7rkpxnVpxoStNf0wu/I2NdgFF7Nk+y9dHpgPrWaWnbGMbZg7/YEsWiVnSX8r6D18=",
                             Username = "admin2"
                         });
                 });

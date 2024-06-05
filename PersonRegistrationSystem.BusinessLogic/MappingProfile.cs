@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using PersonRegistrationSystem.Common.DTOs;
 using PersonRegistrationSystem.DataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonRegistrationSystem.BusinessLogic
 {
@@ -30,6 +25,7 @@ namespace PersonRegistrationSystem.BusinessLogic
             CreateMap<PersonDTO, Person>().ReverseMap();
             CreateMap<PersonCreateDTO, Person>()
                 .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.PlaceOfResidence, opt => opt.MapFrom(src => src.PlaceOfResidence))
                 .ReverseMap();
             CreateMap<PersonUpdateDTO, Person>()
                 .ForMember(dest => dest.User, opt => opt.Ignore())
@@ -41,7 +37,9 @@ namespace PersonRegistrationSystem.BusinessLogic
                 .ForMember(dest => dest.Person, opt => opt.Ignore())
                 .ReverseMap();
             CreateMap<PlaceOfResidenceCreateDTO, PlaceOfResidence>()
-               .ReverseMap();
+    .ForMember(dest => dest.Id, opt => opt.Ignore())
+    .ReverseMap();
+
         }
     }
 }
