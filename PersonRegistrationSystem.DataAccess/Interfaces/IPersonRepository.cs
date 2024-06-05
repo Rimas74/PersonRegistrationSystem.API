@@ -12,6 +12,6 @@ namespace PersonRegistrationSystem.DataAccess.Interfaces
         Task CreatePlaceOfResidenceAsync(PlaceOfResidence placeOfResidence);
         Task UpdateAsync(Person person);
         Task DeleteAsync(int id);
-        Task<bool> ExistsAsync(string personalCode);
+        Task<bool> PersonalCodeExistsForUserAsync(int userId, string personalCode);
     }
 }

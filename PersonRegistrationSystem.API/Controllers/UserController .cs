@@ -78,25 +78,26 @@ namespace PersonRegistrationSystem.API.Controllers
             }
         }
 
-        [HttpDelete("{userId}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteUser(int userId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            if (!User.IsInRole("Admin"))
-            {
-                return Forbid();
-            }
-
-            _logger.LogInformation($"Deleting user with ID: {userId}");
             try
             {
-                var user = await _userService.DeleteUserAsync(userId);
-                return Ok(user);
+                var deletedUser = await _userService.DeleteUserAsync(id);
+                if (deletedUser == null)
+                {
+                    return NotFound("User not found.");
+                }
+                return Ok(deletedUser);
             }
-            catch (ArgumentException ex)
+            catch (KeyNotFoundException ex)
             {
-                _logger.LogError(ex, $"Error deleting user with ID: {userId}");
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while deleting the user with ID: {id}");
+                return StatusCode(500, "Internal server error.");
             }
         }
     }

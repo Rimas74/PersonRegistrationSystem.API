@@ -4,14 +4,11 @@ using PersonRegistrationSystem.DataAccess.Entities;
 using PersonRegistrationSystem.DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace PersonRegistrationSystem.DataAccess.Repositories
 {
-
-
     public class UserRepository : IUserRepository
     {
         private readonly PersonRegistrationContext _context;
@@ -31,20 +28,41 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
             _logger.LogInformation($"User {user.Username} added successfully.");
         }
 
-        public async Task DeleteAsync(int userId)
+        public async Task<User> DeleteUserAsync(int userId)
         {
-            _logger.LogInformation($"Deleting user with ID: {userId}");
-            var user = await GetByIdAsync(userId);
-            if (user != null)
+            var user = await _context.Users
+                .Include(u => u.Persons)
+                .ThenInclude(p => p.PlaceOfResidence)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
             {
-                _context.Users.Remove(user);
-                _context.SaveChanges();
-                _logger.LogInformation($"User with ID: {userId} deleted successfully");
+                throw new KeyNotFoundException("User not found.");
             }
-            else
+
+            foreach (var person in user.Persons)
             {
-                _logger.LogWarning($"User with ID: {userId} not found");
+                _logger.LogInformation($"Deleting person with ID: {person.Id} for user ID: {userId}");
+
+                if (!string.IsNullOrEmpty(person.ProfilePhotoPath) && File.Exists(person.ProfilePhotoPath))
+                {
+                    File.Delete(person.ProfilePhotoPath);
+                }
+
+                var placeOfResidence = await _context.PlacesOfResidence.FirstOrDefaultAsync(p => p.PersonId == person.Id);
+                if (placeOfResidence != null)
+                {
+                    _context.PlacesOfResidence.Remove(placeOfResidence);
+                }
+
+                _context.Persons.Remove(person);
+                _logger.LogInformation($"Person with ID: {person.Id} has been removed from the database.");
             }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return user;
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
@@ -56,7 +74,9 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
         public async Task<User> GetByIdAsync(int userId)
         {
             _logger.LogInformation($"From database getting user by ID: {userId} from database.");
-            return await _context.Users.FindAsync(userId);
+            return await _context.Users
+                .Include(u => u.Persons)
+                .FirstOrDefaultAsync(u => u.Id == userId);
         }
 
         public async Task<User> GetByUsernameAsync(string username)
@@ -72,7 +92,7 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
             if (userToUpdate != null)
             {
                 _context.Users.Update(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 _logger.LogInformation($"User with ID: {user.Id} updated successfully");
             }
             else

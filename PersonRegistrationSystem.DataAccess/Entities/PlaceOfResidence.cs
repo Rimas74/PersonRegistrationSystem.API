@@ -26,7 +26,7 @@ namespace PersonRegistrationSystem.DataAccess.Entities
         public string HouseNumber { get; set; }
 
         [RegularExpression(@"^[0-9]+[A-Za-z]?$", ErrorMessage = "Apartment number is not valid.")]
-        public string ApartmentNumber { get; set; }
+        public string? ApartmentNumber { get; set; }
 
         [Required]
         public int PersonId { get; set; }

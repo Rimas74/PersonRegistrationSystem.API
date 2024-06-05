@@ -19,9 +19,9 @@ public class PersonRepository : IPersonRepository
         _logger = logger;
     }
 
-    public async Task<bool> ExistsAsync(string personalCode)
+    public async Task<bool> PersonalCodeExistsForUserAsync(int userId, string personalCode)
     {
-        return await _context.Persons.AnyAsync(p => p.PersonalCode == personalCode);
+        return await _context.Persons.AnyAsync(p => p.UserId == userId && p.PersonalCode == personalCode);
     }
 
     public async Task CreateAsync(Person person)
@@ -49,11 +49,12 @@ public class PersonRepository : IPersonRepository
         var person = await _context.Persons.FindAsync(id);
         if (person != null)
         {
-            var placeOfResidence = await _context.PlacesOfResidence.FindAsync(person.PlaceOfResidence.Id);
+            var placeOfResidence = await _context.PlacesOfResidence.FirstOrDefaultAsync(pr => pr.PersonId == person.Id);
             if (placeOfResidence != null)
             {
                 _context.PlacesOfResidence.Remove(placeOfResidence);
             }
+
             _context.Persons.Remove(person);
             await _context.SaveChangesAsync();
 
@@ -64,6 +65,8 @@ public class PersonRepository : IPersonRepository
             }
         }
     }
+
+
 
     public async Task<IEnumerable<Person>> GetAllPersonsByUserIdAsync(int userId)
     {

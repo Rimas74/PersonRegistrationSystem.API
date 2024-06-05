@@ -1,8 +1,5 @@
 ﻿using PersonRegistrationSystem.DataAccess.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PersonRegistrationSystem.DataAccess.Interfaces
@@ -14,6 +11,6 @@ namespace PersonRegistrationSystem.DataAccess.Interfaces
         Task AddAsync(User user);
         Task<User> GetByIdAsync(int userId);
         Task UpdateAsync(User user);
-        Task DeleteAsync(int userId);
+        Task<User> DeleteUserAsync(int userId);
     }
 }

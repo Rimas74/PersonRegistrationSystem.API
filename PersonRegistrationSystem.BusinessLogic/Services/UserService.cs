@@ -12,19 +12,22 @@ using System.Text;
 using System.Threading.Tasks;
 using PersonRegistrationSystem.DataAccess.Helpers;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace PersonRegistrationSystem.BusinessLogic.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPersonRepository _personRepository;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
         private readonly ILogger<UserService> _logger;
 
-        public UserService(IUserRepository userRepository, ITokenService tokenService, IMapper mapper, ILogger<UserService> logger)
+        public UserService(IUserRepository userRepository, IPersonRepository personRepository, ITokenService tokenService, IMapper mapper, ILogger<UserService> logger)
         {
             _userRepository = userRepository;
+            _personRepository = personRepository;
             _tokenService = tokenService;
             _mapper = mapper;
             _logger = logger;
@@ -77,14 +80,24 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             var user = await _userRepository.GetByIdAsync(userId);
             if (user == null)
             {
-                _logger.LogWarning($"User with ID {userId} not found.");
-                throw new ArgumentException("User not found.");
+                _logger.LogWarning($"User with ID: {userId} not found.");
+                throw new KeyNotFoundException("User not found.");
             }
-            await _userRepository.DeleteAsync(userId);
 
-            _logger.LogInformation($"User with ID {userId} deleted successfully.");
-            return _mapper.Map<UserDTO>(user);
+            foreach (var person in user.Persons)
+            {
+                _logger.LogInformation($"Deleting person with ID: {person.Id} for user ID: {userId}");
+                await _personRepository.DeleteAsync(person.Id);
+            }
+
+            var deletedUser = await _userRepository.DeleteUserAsync(userId);
+            _logger.LogInformation($"User with ID: {userId} has been removed from the database.");
+
+            return _mapper.Map<UserDTO>(deletedUser);
         }
+
+
+
 
         public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
         {

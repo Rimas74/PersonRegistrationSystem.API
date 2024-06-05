@@ -31,7 +31,7 @@ public class PersonService : IPersonService
             throw new ArgumentException("Invalid Personal Identification Code.");
         }
 
-        var existingPerson = await _personRepository.ExistsAsync(personCreateDTO.PersonalCode);
+        var existingPerson = await _personRepository.PersonalCodeExistsForUserAsync(userId, personCreateDTO.PersonalCode);
         if (existingPerson)
         {
             throw new ArgumentException("A person with this Personal Identification Code already exists.");
@@ -42,24 +42,25 @@ public class PersonService : IPersonService
 
         if (personCreateDTO.ProfilePhoto != null)
         {
-            var directory = Path.Combine("PersonPhoto", $"{person.Name}_{person.LastName}");
+            var directory = "PersonPhoto";
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }
 
-            var filePath = Path.Combine(directory, $"{DateTime.Now:yyyyMMddHHmmss}.jpg");
+            var filename = $"{person.Name}_{person.LastName}_{DateTime.Now:yyyyMMddHHmmss}.jpg";
+            var filePath = Path.Combine(directory, filename);
             ImageHelper.SaveResizedImage(filePath, personCreateDTO.ProfilePhoto, 200, 200);
             person.ProfilePhotoPath = filePath;
         }
 
-        // Save the person first to generate the PersonId
+
         await _personRepository.CreateAsync(person);
 
         var placeOfResidence = _mapper.Map<PlaceOfResidence>(personCreateDTO.PlaceOfResidence);
         placeOfResidence.PersonId = person.Id;
 
-        // Create place of residence with the generated PersonId
+
         await _personRepository.CreatePlaceOfResidenceAsync(placeOfResidence);
 
         _logger.LogInformation($"Person created for user ID: {userId}");
