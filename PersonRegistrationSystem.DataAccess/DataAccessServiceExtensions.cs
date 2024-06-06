@@ -13,7 +13,7 @@ namespace PersonRegistrationSystem.DataAccess
 {
     public static class DataAccessServiceExtensions
     {
-        public static IServiceCollection AddDataAccessServices(this IServiceCollection services, IConfiguration configuration) //string connectionString
+        public static IServiceCollection AddDataAccessServices(this IServiceCollection services, IConfiguration configuration)
         {
 
             services.AddDbContext<PersonRegistrationContext>(options =>

@@ -43,6 +43,7 @@ namespace PersonRegistrationSystem.Common.DTOs
         public string Email { get; set; }
 
         [Required]
+        [MaxFileSize(4 * 1024 * 1024)]
         [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
         public IFormFile ProfilePhoto { get; set; }
 

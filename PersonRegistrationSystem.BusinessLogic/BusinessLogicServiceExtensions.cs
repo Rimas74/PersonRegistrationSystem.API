@@ -15,7 +15,7 @@ namespace PersonRegistrationSystem.BusinessLogic
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPersonService, PersonService>();
-            services.AddScoped<IPlaceOfResidenceService, PlaceOfResidenceService>();
+            //services.AddScoped<IPlaceOfResidenceService, PlaceOfResidenceService>();
             //services.AddScoped<IFileManager>(provider =>
             //{
             //    var logger = provider.GetRequiredService<ILogger<FileManager>>();

@@ -11,11 +11,11 @@ namespace PersonRegistrationSystem.Common.DTOs
     public class UserLoginDTO
     {
         [Required]
-        [StringLength(20, MinimumLength = 8, ErrorMessage = "Username must be between 8 and 20 characters.")]
+        //[StringLength(20, MinimumLength = 8, ErrorMessage = "Username must be between 8 and 20 characters.")]
         public string Username { get; set; }
 
         [Required]
-        [PasswordComplexity]
+        //[PasswordComplexity]
         public string Password { get; set; }
     }
 }
