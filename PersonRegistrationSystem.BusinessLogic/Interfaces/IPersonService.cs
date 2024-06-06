@@ -15,5 +15,6 @@ namespace PersonRegistrationSystem.BusinessLogic.Interfaces
 
         Task<IEnumerable<PersonDTO>> GetAllPersonsByUserIdAsync(int userId);
         Task<PersonDTO> GetPersonByIdAsync(int userId, int personId);
+        Task<PersonGetImageDTO> GetPersonImageAsync(int userId, int personId);
     }
 }

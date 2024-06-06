@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using PersonRegistrationSystem.DataAccess.Entities;
 using PersonRegistrationSystem.DataAccess.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;

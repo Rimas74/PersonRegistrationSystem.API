@@ -42,18 +42,12 @@ public class PersonService : IPersonService
 
         if (personCreateDTO.ProfilePhoto != null)
         {
-            var directory = "PersonPhoto";
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
 
-            var filename = $"{person.Name}_{person.LastName}_{DateTime.Now:yyyyMMddHHmmss}.jpg";
-            var filePath = Path.Combine(directory, filename);
+            var filename = ImageHelper.GenerateImageFileName(person.Name, person.LastName);
+            var filePath = ImageHelper.GetImageFilePath(filename);
             ImageHelper.SaveResizedImage(filePath, personCreateDTO.ProfilePhoto, 200, 200);
             person.ProfilePhotoPath = filePath;
         }
-
 
         await _personRepository.CreateAsync(person);
 
@@ -94,13 +88,49 @@ public class PersonService : IPersonService
     {
         _logger.LogInformation($"Retrieving person with ID: {personId} for user ID: {userId}");
         var person = await _personRepository.GetByIdAsync(personId);
-        if (person == null || person.UserId != userId)
+        if (person == null)
         {
-            _logger.LogWarning($"Person with ID: {personId} not found or access denied for user ID: {userId}");
+            _logger.LogWarning($"Person with ID: {personId} not found for user ID: {userId}");
             throw new KeyNotFoundException("Person not found.");
+
+        }
+        if (person.UserId != userId)
+        {
+            _logger.LogWarning($"User ID: {userId} is not authorized to access person ID: {personId}");
+            throw new UnauthorizedAccessException("Access is denied.");
+
         }
         return _mapper.Map<PersonDTO>(person);
     }
+
+    public async Task<PersonGetImageDTO> GetPersonImageAsync(int userId, int personId)
+    {
+        _logger.LogInformation($"Retrieving picture for person ID: {personId} for user ID: {userId}");
+
+        var person = await _personRepository.GetByIdAsync(personId);
+        if (person == null)
+        {
+            _logger.LogWarning($"Person with ID: {personId} not found for user ID: {userId}");
+            throw new KeyNotFoundException("Person not found.");
+        }
+        if (person.UserId != userId)
+        {
+            _logger.LogWarning($"Access denied for user ID: {userId} to person ID: {personId}");
+            throw new UnauthorizedAccessException("Access denied.");
+        }
+
+        var personImageDTO = new PersonGetImageDTO
+        {
+            ProfilePhoto = await File.ReadAllBytesAsync(person.ProfilePhotoPath),
+            ProfilePhotoPath = person.ProfilePhotoPath
+        };
+
+        _logger.LogInformation($"Picture for person ID: {personId} retrieved successfully for user ID: {userId}");
+
+        return personImageDTO;
+    }
+
+
 
     public Task<PersonDTO> UpdatePersonAsync(int personId, PersonUpdateDTO personUpdateDTO)
     {

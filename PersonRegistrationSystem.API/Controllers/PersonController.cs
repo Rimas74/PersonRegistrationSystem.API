@@ -62,11 +62,17 @@ namespace PersonRegistrationSystem.API.Controllers
             try
             {
                 var person = await _personService.GetPersonByIdAsync(userId.Value, id);
-                if (person == null)
-                {
-                    return NotFound("Person not found.");
-                }
                 return Ok(person);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return NotFound(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return Unauthorized(ex.Message);
             }
             catch (Exception ex)
             {
@@ -74,6 +80,47 @@ namespace PersonRegistrationSystem.API.Controllers
                 return StatusCode(500, "Internal server error.");
             }
         }
+
+        [HttpGet("{id}/photo")]
+        public async Task<IActionResult> GetPersonPicture(int id)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            _logger.LogInformation($"Request to get picture for person ID: {id} by user ID: {userId}");
+
+            try
+            {
+                var personImageDTO = await _personService.GetPersonImageAsync(userId.Value, id);
+
+                if (personImageDTO == null || personImageDTO.ProfilePhoto == null)
+                {
+                    _logger.LogWarning($"Picture for person ID: {id} by user ID: {userId} not found.");
+                    return NotFound("Person or picture not found.");
+                }
+
+                var fileName = Path.GetFileName(personImageDTO.ProfilePhotoPath);
+
+                _logger.LogInformation($"Picture {fileName} for person ID: {id} by user ID: {userId} retrieved successfully.");
+
+                return File(personImageDTO.ProfilePhoto, "image/jpeg", fileName);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return Forbid(); // Call Forbid without a scheme
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving the person picture.");
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> CreatePerson([FromForm] PersonCreateDTO personCreateDTO)

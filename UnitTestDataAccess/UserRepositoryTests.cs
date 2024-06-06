@@ -20,7 +20,10 @@ namespace UnitTestDataAccess
         private UserRepository _userRepository;
         private Mock<ILogger<UserRepository>> _mockLogger;
 
-
+        public UserRepositoryTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
 
         public async Task InitializeAsync()
         {
@@ -28,7 +31,7 @@ namespace UnitTestDataAccess
             _context = await GetDatabaseContext();
             _userRepository = new UserRepository(_context, _mockLogger.Object);
 
-            SeedData();
+            await SeedData();
         }
 
         private async Task<PersonRegistrationContext> GetDatabaseContext()
@@ -104,7 +107,7 @@ namespace UnitTestDataAccess
         public async Task DeleteUser_ShouldRemoveUser_WhenUserExists()
         {
             // Act
-            await _userRepository.DeleteAsync(1);
+            await _userRepository.DeleteUserAsync(1);
             var user = await _userRepository.GetByIdAsync(1);
 
             // Assert
@@ -132,7 +135,6 @@ namespace UnitTestDataAccess
         {
             // Act
             var users = await _userRepository.GetAllAsync();
-
 
             // Assert
             Assert.NotNull(users);
@@ -183,4 +185,3 @@ namespace UnitTestDataAccess
         }
     }
 }
-

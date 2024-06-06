@@ -1,18 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using PersonRegistrationSystem.BusinessLogic.Interfaces;
 using PersonRegistrationSystem.Common.DTOs;
 using PersonRegistrationSystem.DataAccess.Entities;
-using PersonRegistrationSystem.DataAccess.Interfaces;
-using PersonRegistrationSystem.DataAccess.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using PersonRegistrationSystem.DataAccess.Helpers;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
+using PersonRegistrationSystem.DataAccess.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PersonRegistrationSystem.BusinessLogic.Services
 {
@@ -47,8 +41,6 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             var user = _mapper.Map<User>(userRegisterDTO);
 
             var (passwordHash, salt) = PasswordHasher.CreatePasswordHash(userRegisterDTO.Password);
-
-
             user.PasswordHash = passwordHash;
             user.Salt = salt;
 
@@ -57,7 +49,6 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             _logger.LogInformation($"User {userRegisterDTO.Username} registered successfully.");
             return _mapper.Map<UserDTO>(user);
         }
-
 
         public async Task<TokenDTO> LoginUserAsync(UserLoginDTO userLoginDTO)
         {
@@ -71,7 +62,6 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             _logger.LogInformation($"User {userLoginDTO.Username} logged in successfully.");
             return new TokenDTO { Token = token };
         }
-
 
         public async Task<UserDTO> DeleteUserAsync(int userId)
         {
@@ -96,15 +86,11 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             return _mapper.Map<UserDTO>(deletedUser);
         }
 
-
-
-
         public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<UserDTO>>(users);
         }
-
 
         private void ValidateUserCredentials(User user, string password)
         {
@@ -112,7 +98,6 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             {
                 _logger.LogWarning("Invalid username.");
                 throw new UnauthorizedAccessException("Invalid username.");
-
             }
 
             bool isPasswordValid = PasswordHasher.VerifyPassword(password, user.PasswordHash, user.Salt);
@@ -123,8 +108,5 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
                 throw new UnauthorizedAccessException("Invalid password.");
             }
         }
-
-
-
     }
 }

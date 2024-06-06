@@ -27,20 +27,23 @@ public static class ImageHelper
             }
         }
     }
-    //public async Task DeleteImageAsync(string imagePath)
-    //{
-    //    var filePath = Path.Combine(imagePath);
+    public static string GenerateImageFileName(string name, string lastName)
+    {
+        return $"{name}_{lastName}_{DateTime.Now:yyyyMMddHHmmss}.jpg";
+    }
 
-    //    if (File.Exists(filePath))
-    //    {
-    //       File.Delete(filePath);
+    public static string GetImageDirectory()
+    {
+        return "PersonPhoto";
+    }
 
-    //    }
-    //}
+    public static string GetImageFilePath(string fileName)
+    {
+        var directory = GetImageDirectory();
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+        return Path.Combine(directory, fileName);
+    }
 }
-
-
-
-
-
-
