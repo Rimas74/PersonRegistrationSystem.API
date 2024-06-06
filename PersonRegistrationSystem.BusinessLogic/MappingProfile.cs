@@ -24,7 +24,6 @@ namespace PersonRegistrationSystem.BusinessLogic
                 .ReverseMap();
 
             CreateMap<PersonDTO, Person>().ReverseMap();
-
             CreateMap<PersonCreateDTO, Person>()
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.PlaceOfResidence, opt => opt.MapFrom(src => src.PlaceOfResidence))
@@ -34,8 +33,7 @@ namespace PersonRegistrationSystem.BusinessLogic
                 .ForMember(dest => dest.ProfilePhoto, opt => opt.Ignore())
                 .ForMember(dest => dest.ProfilePhotoPath, opt => opt.MapFrom(src => src.ProfilePhotoPath));
 
-
-            CreateMap<PersonUpdateDTO, Person>()
+            CreateMap<PersonUpdateDetailsDTO, Person>()
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.PlaceOfResidence, opt => opt.Ignore())
                 .ReverseMap();
@@ -49,7 +47,6 @@ namespace PersonRegistrationSystem.BusinessLogic
             CreateMap<PlaceOfResidenceCreateDTO, PlaceOfResidence>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ReverseMap();
-
         }
     }
 }

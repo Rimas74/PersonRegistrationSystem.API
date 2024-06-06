@@ -8,10 +8,11 @@ namespace PersonRegistrationSystem.DataAccess.Interfaces
     {
         Task<IEnumerable<Person>> GetAllPersonsByUserIdAsync(int userId);
         Task<Person> GetByIdAsync(int id);
+        Task<bool> PersonalCodeExistsForUserAsync(int userId, string personalCode);
         Task CreateAsync(Person person);
         Task CreatePlaceOfResidenceAsync(PlaceOfResidence placeOfResidence);
-        Task UpdateAsync(Person person);
+        Task UpdatePersonDetailsAsync(Person person);
+        Task UpdatePlaceOfResidenceAsync(PlaceOfResidence placeOfResidence);
         Task DeleteAsync(int id);
-        Task<bool> PersonalCodeExistsForUserAsync(int userId, string personalCode);
     }
 }

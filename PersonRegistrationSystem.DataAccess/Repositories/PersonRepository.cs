@@ -27,20 +27,16 @@ public class PersonRepository : IPersonRepository
     public async Task CreateAsync(Person person)
     {
         _logger.LogInformation($"Creating person for user ID: {person.UserId} to the database.");
-
         await _context.Persons.AddAsync(person);
         await _context.SaveChangesAsync();
-
         _logger.LogInformation($"Person added for user ID: {person.UserId} to the database.");
     }
 
     public async Task CreatePlaceOfResidenceAsync(PlaceOfResidence placeOfResidence)
     {
         _logger.LogInformation("Creating place of residence to the database.");
-
         await _context.PlacesOfResidence.AddAsync(placeOfResidence);
         await _context.SaveChangesAsync();
-
         _logger.LogInformation("Place of residence added to the database.");
     }
 
@@ -58,15 +54,12 @@ public class PersonRepository : IPersonRepository
             _context.Persons.Remove(person);
             await _context.SaveChangesAsync();
 
-
             if (!string.IsNullOrEmpty(person.ProfilePhotoPath) && File.Exists(person.ProfilePhotoPath))
             {
                 File.Delete(person.ProfilePhotoPath);
             }
         }
     }
-
-
 
     public async Task<IEnumerable<Person>> GetAllPersonsByUserIdAsync(int userId)
     {
@@ -85,9 +78,19 @@ public class PersonRepository : IPersonRepository
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public async Task UpdateAsync(Person person)
+    public async Task UpdatePersonDetailsAsync(Person person)
     {
+        _logger.LogInformation($"Updating person details for person ID: {person.Id}");
         _context.Persons.Update(person);
         await _context.SaveChangesAsync();
+        _logger.LogInformation($"Person details updated for person ID: {person.Id}");
+    }
+
+    public async Task UpdatePlaceOfResidenceAsync(PlaceOfResidence placeOfResidence)
+    {
+        _logger.LogInformation($"Updating place of residence for person ID: {placeOfResidence.PersonId}");
+        _context.PlacesOfResidence.Update(placeOfResidence);
+        await _context.SaveChangesAsync();
+        _logger.LogInformation($"Place of residence updated for person ID: {placeOfResidence.PersonId}");
     }
 }

@@ -46,4 +46,11 @@ public static class ImageHelper
         }
         return Path.Combine(directory, fileName);
     }
+    public static void DeleteImage(string filePath)
+    {
+        if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+    }
 }

@@ -120,8 +120,6 @@ namespace PersonRegistrationSystem.API.Controllers
             }
         }
 
-
-
         [HttpPost]
         public async Task<IActionResult> CreatePerson([FromForm] PersonCreateDTO personCreateDTO)
         {
@@ -146,6 +144,69 @@ namespace PersonRegistrationSystem.API.Controllers
                 return StatusCode(500, "Internal server error.");
             }
         }
+
+        [HttpPut("{id}/details")]
+        public async Task<IActionResult> UpdatePersonDetails(int id, [FromBody] PersonUpdateDetailsDTO personUpdateDetailsDTO)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                var updatedPerson = await _personService.UpdatePersonDetailsAsync(userId.Value, id, personUpdateDetailsDTO);
+                return Ok(updatedPerson);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return NotFound(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the person details.");
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
+        [HttpPut("{id}/image")]
+        public async Task<IActionResult> UpdatePersonImage(int id, [FromForm] PersonUpdateImageDTO personUpdateImageDTO)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                var updatedPerson = await _personService.UpdatePersonImageAsync(userId.Value, id, personUpdateImageDTO);
+                return Ok(updatedPerson);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return NotFound(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the person image.");
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson(int id)
@@ -186,6 +247,7 @@ namespace PersonRegistrationSystem.API.Controllers
             }
             return int.Parse(userIdClaim.Value);
         }
+
 
 
     }

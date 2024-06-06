@@ -3,11 +3,9 @@ using Microsoft.Extensions.Logging;
 using PersonRegistrationSystem.BusinessLogic.Interfaces;
 using PersonRegistrationSystem.Common.DTOs;
 using PersonRegistrationSystem.DataAccess.Entities;
+using PersonRegistrationSystem.DataAccess.Enums;
 using PersonRegistrationSystem.DataAccess.Helpers;
 using PersonRegistrationSystem.DataAccess.Interfaces;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 public class PersonService : IPersonService
 {
@@ -37,12 +35,17 @@ public class PersonService : IPersonService
             throw new ArgumentException("A person with this Personal Identification Code already exists.");
         }
 
+        if (!Enum.TryParse(personCreateDTO.Gender, out Gender gender))
+        {
+            throw new ArgumentException("Invalid gender value.");
+        }
+
         var person = _mapper.Map<Person>(personCreateDTO);
         person.UserId = userId;
+        person.Gender = gender;
 
         if (personCreateDTO.ProfilePhoto != null)
         {
-
             var filename = ImageHelper.GenerateImageFileName(person.Name, person.LastName);
             var filePath = ImageHelper.GetImageFilePath(filename);
             ImageHelper.SaveResizedImage(filePath, personCreateDTO.ProfilePhoto, 200, 200);
@@ -53,7 +56,6 @@ public class PersonService : IPersonService
 
         var placeOfResidence = _mapper.Map<PlaceOfResidence>(personCreateDTO.PlaceOfResidence);
         placeOfResidence.PersonId = person.Id;
-
 
         await _personRepository.CreatePlaceOfResidenceAsync(placeOfResidence);
 
@@ -73,6 +75,9 @@ public class PersonService : IPersonService
         }
 
         await _personRepository.DeleteAsync(personId);
+
+        ImageHelper.DeleteImage(person.ProfilePhotoPath);
+
         _logger.LogInformation($"Person with ID: {personId} deleted successfully for user ID: {userId}");
         return _mapper.Map<PersonDTO>(person);
     }
@@ -92,13 +97,11 @@ public class PersonService : IPersonService
         {
             _logger.LogWarning($"Person with ID: {personId} not found for user ID: {userId}");
             throw new KeyNotFoundException("Person not found.");
-
         }
         if (person.UserId != userId)
         {
             _logger.LogWarning($"User ID: {userId} is not authorized to access person ID: {personId}");
             throw new UnauthorizedAccessException("Access is denied.");
-
         }
         return _mapper.Map<PersonDTO>(person);
     }
@@ -130,10 +133,57 @@ public class PersonService : IPersonService
         return personImageDTO;
     }
 
-
-
-    public Task<PersonDTO> UpdatePersonAsync(int personId, PersonUpdateDTO personUpdateDTO)
+    public async Task<PersonDTO> UpdatePersonDetailsAsync(int userId, int personId, PersonUpdateDetailsDTO personUpdateDetailsDTO)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation($"Updating person details for person ID: {personId} by user ID: {userId}");
+
+        var person = await _personRepository.GetByIdAsync(personId);
+        if (person == null || person.UserId != userId)
+        {
+            _logger.LogWarning($"Person with ID: {personId} not found or access denied for user ID: {userId}");
+            throw new KeyNotFoundException("Person not found.");
+        }
+
+        _mapper.Map(personUpdateDetailsDTO, person);
+
+        if (Enum.TryParse(personUpdateDetailsDTO.Gender, out Gender gender))
+        {
+            person.Gender = gender;
+        }
+        else
+        {
+            _logger.LogWarning($"Invalid gender value: {personUpdateDetailsDTO.Gender} for person ID: {personId}");
+            throw new ArgumentException("Invalid gender value.");
+        }
+
+        await _personRepository.UpdatePersonDetailsAsync(person);
+        await _personRepository.UpdatePlaceOfResidenceAsync(person.PlaceOfResidence);
+
+        _logger.LogInformation($"Person details updated for person ID: {personId} by user ID: {userId}");
+        return _mapper.Map<PersonDTO>(person);
+    }
+
+    public async Task<PersonDTO> UpdatePersonImageAsync(int userId, int personId, PersonUpdateImageDTO personUpdateImageDTO)
+    {
+        _logger.LogInformation($"Updating person image for person ID: {personId} by user ID: {userId}");
+
+        var person = await _personRepository.GetByIdAsync(personId);
+        if (person == null || person.UserId != userId)
+        {
+            _logger.LogWarning($"Person with ID: {personId} not found or access denied for user ID: {userId}");
+            throw new KeyNotFoundException("Person not found.");
+        }
+
+        ImageHelper.DeleteImage(person.ProfilePhotoPath);
+
+        var filename = ImageHelper.GenerateImageFileName(person.Name, person.LastName);
+        var filePath = ImageHelper.GetImageFilePath(filename);
+        ImageHelper.SaveResizedImage(filePath, personUpdateImageDTO.ProfilePhoto, 200, 200);
+        person.ProfilePhotoPath = filePath;
+
+        await _personRepository.UpdatePersonDetailsAsync(person);
+
+        _logger.LogInformation($"Person image updated for person ID: {personId} by user ID: {userId}");
+        return _mapper.Map<PersonDTO>(person);
     }
 }
