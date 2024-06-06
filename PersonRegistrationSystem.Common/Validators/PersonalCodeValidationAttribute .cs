@@ -1,14 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonRegistrationSystem.DataAccess.Helpers
 {
-    public static class PersonalCodeValidator
+    public class PersonalCodeValidationAttribute : ValidationAttribute
     {
-        public static bool Validate(string code)
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var code = value as string;
+            if (string.IsNullOrEmpty(code) || !Validate(code))
+            {
+                return new ValidationResult("Invalid Personal Identification Code.");
+            }
+            return ValidationResult.Success;
+        }
+
+        private bool Validate(string code)
         {
             if (code.Length != 11 || !IsAllDigits(code))
                 return false;
@@ -26,12 +34,12 @@ namespace PersonRegistrationSystem.DataAccess.Helpers
             return checksum == int.Parse(code[10].ToString());
         }
 
-        private static bool IsAllDigits(string code)
+        private bool IsAllDigits(string code)
         {
             return code.All(char.IsDigit);
         }
 
-        private static bool IsValidDate(string code)
+        private bool IsValidDate(string code)
         {
             int g = int.Parse(code[0].ToString());
             int year;
@@ -42,7 +50,6 @@ namespace PersonRegistrationSystem.DataAccess.Helpers
             }
             else
             {
-
                 year = (g / 2) * 100 + 1800 + int.Parse(code.Substring(1, 2));
             }
 
@@ -50,7 +57,7 @@ namespace PersonRegistrationSystem.DataAccess.Helpers
             return DateTime.TryParse(datePart, out _);
         }
 
-        private static int CalculateChecksum(string code, int[] weights)
+        private int CalculateChecksum(string code, int[] weights)
         {
             int sum = 0;
             for (int i = 0; i < 10; i++)

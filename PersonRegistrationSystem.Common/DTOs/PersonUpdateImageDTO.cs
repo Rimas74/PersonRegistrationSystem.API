@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using PersonRegistrationSystem.Common.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,9 @@ namespace PersonRegistrationSystem.Common.DTOs
     public class PersonUpdateImageDTO
     {
         [Required]
+        [MaxFileSize(5 * 1024 * 1024)]
         [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
+
         public IFormFile ProfilePhoto { get; set; }
     }
 }

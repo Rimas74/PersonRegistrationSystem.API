@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PersonRegistrationSystem.Common.Validators;
+using PersonRegistrationSystem.DataAccess.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -25,6 +27,10 @@ namespace PersonRegistrationSystem.Common.DTOs
         [Required]
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
+
+        [Required]
+        [PersonalCodeValidation]
+        public string PersonalCode { get; set; }
 
         [Required]
         [Phone]

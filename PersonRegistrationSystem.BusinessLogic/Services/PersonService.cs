@@ -4,7 +4,6 @@ using PersonRegistrationSystem.BusinessLogic.Interfaces;
 using PersonRegistrationSystem.Common.DTOs;
 using PersonRegistrationSystem.DataAccess.Entities;
 using PersonRegistrationSystem.DataAccess.Enums;
-using PersonRegistrationSystem.DataAccess.Helpers;
 using PersonRegistrationSystem.DataAccess.Interfaces;
 
 public class PersonService : IPersonService
@@ -23,11 +22,6 @@ public class PersonService : IPersonService
     public async Task<PersonDTO> CreatePersonAsync(int userId, PersonCreateDTO personCreateDTO)
     {
         _logger.LogInformation($"Creating person for user ID: {userId}");
-
-        if (!PersonalCodeValidator.Validate(personCreateDTO.PersonalCode))
-        {
-            throw new ArgumentException("Invalid Personal Identification Code.");
-        }
 
         var existingPerson = await _personRepository.PersonalCodeExistsForUserAsync(userId, personCreateDTO.PersonalCode);
         if (existingPerson)

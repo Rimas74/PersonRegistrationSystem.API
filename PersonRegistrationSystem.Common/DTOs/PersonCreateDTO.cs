@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PersonRegistrationSystem.Common.Validators;
+using PersonRegistrationSystem.DataAccess.Helpers;
 
 namespace PersonRegistrationSystem.Common.DTOs
 {
@@ -29,7 +31,7 @@ namespace PersonRegistrationSystem.Common.DTOs
         public DateTime Birthday { get; set; }
 
         [Required]
-        [RegularExpression(@"^\d{11}$", ErrorMessage = "Personal Identification Code must be 11 digits.")]
+        [PersonalCodeValidation]
         public string PersonalCode { get; set; }
 
         [Required]

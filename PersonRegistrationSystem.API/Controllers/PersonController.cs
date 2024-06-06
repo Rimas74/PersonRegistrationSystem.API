@@ -146,7 +146,7 @@ namespace PersonRegistrationSystem.API.Controllers
         }
 
         [HttpPut("{id}/details")]
-        public async Task<IActionResult> UpdatePersonDetails(int id, [FromBody] PersonUpdateDetailsDTO personUpdateDetailsDTO)
+        public async Task<IActionResult> UpdatePersonDetails(int id, [FromForm] PersonUpdateDetailsDTO personUpdateDetailsDTO)
         {
             var userId = GetUserIdFromClaims();
             if (userId == null)

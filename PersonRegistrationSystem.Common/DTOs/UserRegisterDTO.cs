@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using PersonRegistrationSystem.Common.Validators;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
