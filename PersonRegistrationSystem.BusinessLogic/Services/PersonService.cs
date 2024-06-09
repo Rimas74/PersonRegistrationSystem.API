@@ -132,10 +132,15 @@ public class PersonService : IPersonService
         _logger.LogInformation($"Updating person details for person ID: {personId} by user ID: {userId}");
 
         var person = await _personRepository.GetByIdAsync(personId);
-        if (person == null || person.UserId != userId)
+        if (person == null)
         {
-            _logger.LogWarning($"Person with ID: {personId} not found or access denied for user ID: {userId}");
+            _logger.LogWarning($"Person with ID: {personId} not found");
             throw new KeyNotFoundException("Person not found.");
+        }
+        if (person.UserId != userId)
+        {
+            _logger.LogWarning($"User ID: {userId} is not authorized to access person ID: {personId}");
+            throw new UnauthorizedAccessException("Access is denied.");
         }
 
         _mapper.Map(personUpdateDetailsDTO, person);
@@ -162,10 +167,15 @@ public class PersonService : IPersonService
         _logger.LogInformation($"Updating person image for person ID: {personId} by user ID: {userId}");
 
         var person = await _personRepository.GetByIdAsync(personId);
-        if (person == null || person.UserId != userId)
+        if (person == null)
         {
-            _logger.LogWarning($"Person with ID: {personId} not found or access denied for user ID: {userId}");
+            _logger.LogWarning($"Person with ID: {personId} not found");
             throw new KeyNotFoundException("Person not found.");
+        }
+        if (person.UserId != userId)
+        {
+            _logger.LogWarning($"User ID: {userId} is not authorized to access person ID: {personId}");
+            throw new UnauthorizedAccessException("Access is denied.");
         }
 
         ImageHelper.DeleteImage(person.ProfilePhotoPath);
@@ -180,4 +190,5 @@ public class PersonService : IPersonService
         _logger.LogInformation($"Person image updated for person ID: {personId} by user ID: {userId}");
         return _mapper.Map<PersonDTO>(person);
     }
+
 }

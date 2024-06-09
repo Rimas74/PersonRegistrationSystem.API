@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PersonRegistrationSystem.API\PersonRegistrationSystem.API.csproj" />
+    <ProjectReference Include="..\UnitTestHelpers\UnitTestHelpers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

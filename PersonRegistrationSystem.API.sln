@@ -13,9 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonRegistrationSystem.Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestDataAccess", "UnitTestDataAccess\UnitTestDataAccess.csproj", "{D154A9B7-94C6-4A5D-AE7D-4FEEFB4DD298}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestBusinessLogic", "UnitTestBusinessLogic\UnitTestBusinessLogic.csproj", "{9118EE01-719F-47C8-950A-A686F52BE981}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestBusinessLogic", "UnitTestBusinessLogic\UnitTestBusinessLogic.csproj", "{9118EE01-719F-47C8-950A-A686F52BE981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestControllers", "UnitTestControllers\UnitTestControllers.csproj", "{0BD06977-73E4-4D5C-BB32-A7A0E46639D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestControllers", "UnitTestControllers\UnitTestControllers.csproj", "{0BD06977-73E4-4D5C-BB32-A7A0E46639D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestHelpers", "UnitTestHelpers\UnitTestHelpers.csproj", "{724DAFA6-7A22-4693-AD22-CD274C8D76B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{0BD06977-73E4-4D5C-BB32-A7A0E46639D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BD06977-73E4-4D5C-BB32-A7A0E46639D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BD06977-73E4-4D5C-BB32-A7A0E46639D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{724DAFA6-7A22-4693-AD22-CD274C8D76B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{724DAFA6-7A22-4693-AD22-CD274C8D76B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{724DAFA6-7A22-4693-AD22-CD274C8D76B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{724DAFA6-7A22-4693-AD22-CD274C8D76B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

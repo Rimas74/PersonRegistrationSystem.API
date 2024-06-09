@@ -82,6 +82,12 @@ namespace PersonRegistrationSystem.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
+            if (!User.IsInRole("Admin"))
+            {
+                _logger.LogWarning($"User does not have the required role to delete user ID: {id}");
+                return Forbid();
+            }
+
             try
             {
                 var deletedUser = await _userService.DeleteUserAsync(id);
@@ -93,6 +99,7 @@ namespace PersonRegistrationSystem.API.Controllers
             }
             catch (KeyNotFoundException ex)
             {
+                _logger.LogWarning(ex.Message);
                 return NotFound(ex.Message);
             }
             catch (Exception ex)

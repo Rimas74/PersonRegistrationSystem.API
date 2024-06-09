@@ -24,6 +24,7 @@ namespace PersonRegistrationSystem.BusinessLogic
                 .ReverseMap();
 
             CreateMap<PersonDTO, Person>().ReverseMap();
+
             CreateMap<PersonCreateDTO, Person>()
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.PlaceOfResidence, opt => opt.MapFrom(src => src.PlaceOfResidence))

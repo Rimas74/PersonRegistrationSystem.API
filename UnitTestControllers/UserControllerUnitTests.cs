@@ -281,26 +281,27 @@ namespace UnitTestAPI
             var result = await _userController.DeleteUser(userId);
 
             // Assert
-            Assert.IsType<ForbidResult>(result);
+            var forbidResult = Assert.IsType<ForbidResult>(result);
+            Assert.NotNull(forbidResult);
         }
 
         [Fact]
-        public async Task DeleteUser_ShouldReturnBadRequest_WhenUserDoesNotExist_AndUserIsAdmin()
+        public async Task DeleteUser_ShouldReturnNotFound_WhenUserDoesNotExist_AndUserIsAdmin()
         {
             // Arrange
             SetUserRole("Admin");
             var userId = 3;
 
-            _mockUserService.Setup(service => service.DeleteUserAsync(It.IsAny<int>())).ThrowsAsync(new ArgumentException("User not found."));
+            _mockUserService.Setup(service => service.DeleteUserAsync(It.IsAny<int>())).ThrowsAsync(new KeyNotFoundException("User not found."));
 
             // Act
             var result = await _userController.DeleteUser(userId);
 
             // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.NotNull(badRequestResult);
-            Assert.Equal(400, badRequestResult.StatusCode);
-            Assert.Equal("User not found.", badRequestResult.Value);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.NotNull(notFoundResult);
+            Assert.Equal(404, notFoundResult.StatusCode);
+            Assert.Equal("User not found.", notFoundResult.Value);
         }
     }
 }

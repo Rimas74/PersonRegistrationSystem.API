@@ -21,10 +21,15 @@
   <ItemGroup>
     <ProjectReference Include="..\PersonRegistrationSystem.BusinessLogic\PersonRegistrationSystem.BusinessLogic.csproj" />
     <ProjectReference Include="..\PersonRegistrationSystem.DataAccess\PersonRegistrationSystem.DataAccess.csproj" />
+    <ProjectReference Include="..\UnitTestHelpers\UnitTestHelpers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Images\Output\" />
   </ItemGroup>
 
 </Project>

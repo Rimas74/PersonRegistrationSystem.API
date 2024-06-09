@@ -2,35 +2,54 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
-using PersonRegistrationSystem.DataAccess.Entities;
-using PersonRegistrationSystem.DataAccess.Repositories;
 using Microsoft.Extensions.Logging;
 using Moq;
+using PersonRegistrationSystem.BusinessLogic.Interfaces;
+using PersonRegistrationSystem.BusinessLogic.Services;
+using PersonRegistrationSystem.Common.DTOs;
 using PersonRegistrationSystem.DataAccess;
-using Xunit.Abstractions;
+using PersonRegistrationSystem.DataAccess.Entities;
+using PersonRegistrationSystem.DataAccess.Helpers;
+using PersonRegistrationSystem.DataAccess.Interfaces;
+using Xunit;
 
-namespace UnitTestDataAccess
+namespace UnitTestBusinessLogic
 {
-    public class UserRepositoryTests : IAsyncLifetime
+    public class UserServiceTests : IAsyncLifetime
     {
-        private readonly ITestOutputHelper _output;
+        private readonly Mock<IUserRepository> _mockUserRepository;
+        private readonly Mock<IPersonRepository> _mockPersonRepository;
+        private readonly Mock<ITokenService> _mockTokenService;
+        private readonly IMapper _mapper;
+        private readonly Mock<ILogger<UserService>> _mockLogger;
+        private readonly UserService _userService;
         private PersonRegistrationContext _context;
-        private UserRepository _userRepository;
-        private Mock<ILogger<UserRepository>> _mockLogger;
+        private List<User> _users;
+        private List<UserDTO> _userDTOs;
 
-        public UserRepositoryTests(ITestOutputHelper output)
+        public UserServiceTests()
         {
-            _output = output;
+            _mockUserRepository = new Mock<IUserRepository>();
+            _mockPersonRepository = new Mock<IPersonRepository>();
+            _mockTokenService = new Mock<ITokenService>();
+            _mockLogger = new Mock<ILogger<UserService>>();
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<User, UserDTO>().ReverseMap();
+                cfg.CreateMap<UserRegisterDTO, User>();
+                cfg.CreateMap<UserLoginDTO, User>();
+            });
+
+            _mapper = config.CreateMapper();
+            _userService = new UserService(_mockUserRepository.Object, _mockPersonRepository.Object, _mockTokenService.Object, _mapper, _mockLogger.Object);
         }
 
         public async Task InitializeAsync()
         {
-            _mockLogger = new Mock<ILogger<UserRepository>>();
             _context = await GetDatabaseContext();
-            _userRepository = new UserRepository(_context, _mockLogger.Object);
-
             await SeedData();
         }
 
@@ -50,27 +69,38 @@ namespace UnitTestDataAccess
 
         private async Task SeedData()
         {
-            var users = new List<User>
+            var (passwordHash1, salt1) = PasswordHasher.CreatePasswordHash("Password12!@");
+            var (passwordHash2, salt2) = PasswordHasher.CreatePasswordHash("Password45!@");
+
+            _users = new List<User>
             {
                 new User
                 {
                     Id = 1,
                     Username = "user1",
-                    PasswordHash = "hashedpassword1",
-                    Salt = "salt1",
-                    Role = "User"
+                    PasswordHash = passwordHash1,
+                    Salt = salt1,
+                    Role = "User",
+                    Persons = new List<Person>()
                 },
                 new User
                 {
                     Id = 2,
                     Username = "user2",
-                    PasswordHash = "hashedpassword2",
-                    Salt = "salt2",
-                    Role = "Admin"
+                    PasswordHash = passwordHash2,
+                    Salt = salt2,
+                    Role = "Admin",
+                    Persons = new List<Person>()
                 }
             };
 
-            await _context.Users.AddRangeAsync(users);
+            _userDTOs = new List<UserDTO>
+            {
+                new UserDTO { Id = 1, Username = "user1" },
+                new UserDTO { Id = 2, Username = "user2" }
+            };
+
+            await _context.Users.AddRangeAsync(_users);
             await _context.SaveChangesAsync();
         }
 
@@ -81,107 +111,128 @@ namespace UnitTestDataAccess
         }
 
         [Fact]
-        public async Task AddUser_ShouldReturnUser()
+        public async Task RegisterUserAsync_ShouldReturnUserDTO_WhenUserIsRegistered()
         {
             // Arrange
-            var newUser = new User
-            {
-                Id = 3,
-                Username = "user3",
-                PasswordHash = "hashedpassword3",
-                Salt = "salt3",
-                Role = "User"
-            };
+            var userRegisterDTO = new UserRegisterDTO { Username = "user3", Password = "Password12!@" };
+            var user = new User { Id = 3, Username = "user3", PasswordHash = "hashedpassword3", Salt = "salt3" };
+
+            _mockUserRepository.Setup(repo => repo.GetByUsernameAsync(userRegisterDTO.Username)).ReturnsAsync((User)null);
+            _mockUserRepository.Setup(repo => repo.AddAsync(It.IsAny<User>())).Returns(Task.CompletedTask).Callback<User>(u => u.Id = 3);
 
             // Act
-            await _userRepository.AddAsync(newUser);
-            var user = await _userRepository.GetByIdAsync(3);
+            var result = await _userService.RegisterUserAsync(userRegisterDTO);
 
             // Assert
-            Assert.NotNull(user);
-            Assert.Equal(3, user.Id);
-            Assert.Equal("user3", user.Username);
+            Assert.NotNull(result);
+            Assert.Equal(3, result.Id);
+            Assert.Equal("user3", result.Username);
         }
 
         [Fact]
-        public async Task DeleteUser_ShouldRemoveUser_WhenUserExists()
-        {
-            // Act
-            await _userRepository.DeleteUserAsync(1);
-            var user = await _userRepository.GetByIdAsync(1);
-
-            // Assert
-            Assert.Null(user);
-        }
-
-        [Fact]
-        public async Task UpdateUser_ShouldUpdateUserDetails_WhenUserExists()
+        public async Task RegisterUserAsync_ShouldThrowArgumentException_WhenUsernameExists()
         {
             // Arrange
-            var existingUser = await _userRepository.GetByIdAsync(1);
-            existingUser.Username = "user1Updated";
+            var userRegisterDTO = new UserRegisterDTO { Username = "user1", Password = "Password12!@" };
 
-            // Act
-            await _userRepository.UpdateAsync(existingUser);
-            var updatedUser = await _userRepository.GetByIdAsync(1);
+            _mockUserRepository.Setup(repo => repo.GetByUsernameAsync(userRegisterDTO.Username)).ReturnsAsync(_users.First());
 
-            // Assert
-            Assert.NotNull(updatedUser);
-            Assert.Equal("user1Updated", updatedUser.Username);
+            // Act & Assert
+            var ex = await Assert.ThrowsAsync<ArgumentException>(() => _userService.RegisterUserAsync(userRegisterDTO));
+            Assert.Equal("Username already exists.", ex.Message);
         }
 
         [Fact]
-        public async Task GetAllAsync_ShouldReturnAllUsers()
+        public async Task LoginUserAsync_ShouldReturnTokenDTO_WhenCredentialsAreValid()
         {
+            // Arrange
+            var userLoginDTO = new UserLoginDTO { Username = "user1", Password = "Password12!@" };
+            var user = _users.First();
+            var token = "generatedToken";
+
+            _mockUserRepository.Setup(repo => repo.GetByUsernameAsync(userLoginDTO.Username)).ReturnsAsync(user);
+            _mockTokenService.Setup(service => service.GenerateToken(user.Username, user.Role, user.Id)).Returns(token);
+
             // Act
-            var users = await _userRepository.GetAllAsync();
+            var result = await _userService.LoginUserAsync(userLoginDTO);
 
             // Assert
-            Assert.NotNull(users);
-            Assert.Equal(2, users.Count());
+            Assert.NotNull(result);
+            Assert.Equal(token, result.Token);
         }
 
         [Fact]
-        public async Task GetUserById_ShouldReturnUser_WhenUserExists()
+        public async Task LoginUserAsync_ShouldThrowUnauthorizedAccessException_WhenPasswordIsInvalid()
         {
-            // Act
-            var user = await _userRepository.GetByIdAsync(1);
+            // Arrange
+            var userLoginDTO = new UserLoginDTO { Username = "user1", Password = "WrongPassword!@" };
+            var user = _users.First();
 
-            // Assert
-            Assert.NotNull(user);
-            Assert.Equal(1, user.Id);
-            Assert.Equal("user1", user.Username);
+            _mockUserRepository.Setup(repo => repo.GetByUsernameAsync(userLoginDTO.Username)).ReturnsAsync(user);
+
+            // Act & Assert
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _userService.LoginUserAsync(userLoginDTO));
+            Assert.Equal("Invalid password.", ex.Message);
         }
 
         [Fact]
-        public async Task GetUserById_ShouldReturnNull_WhenUserDoesNotExist()
+        public async Task LoginUserAsync_ShouldThrowUnauthorizedAccessException_WhenUsernameIsInvalid()
         {
-            // Act
-            var user = await _userRepository.GetByIdAsync(3);
+            // Arrange
+            var userLoginDTO = new UserLoginDTO { Username = "invalidUser", Password = "Password12!@" };
 
-            // Assert
-            Assert.Null(user);
+            _mockUserRepository.Setup(repo => repo.GetByUsernameAsync(userLoginDTO.Username)).ReturnsAsync((User)null);
+
+            // Act & Assert
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _userService.LoginUserAsync(userLoginDTO));
+            Assert.Equal("Invalid username.", ex.Message);
         }
 
         [Fact]
-        public async Task GetByUsernameAsync_ShouldReturnUser_WhenUsernameExists()
+        public async Task DeleteUserAsync_ShouldReturnUserDTO_WhenUserIsDeleted()
         {
+            // Arrange
+            var userId = 1;
+            var user = _users.First();
+            var userDTO = _userDTOs.First();
+
+            _mockUserRepository.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(user);
+            _mockUserRepository.Setup(repo => repo.DeleteUserAsync(userId)).ReturnsAsync(user);
+
             // Act
-            var user = await _userRepository.GetByUsernameAsync("user2");
+            var result = await _userService.DeleteUserAsync(userId);
 
             // Assert
-            Assert.NotNull(user);
-            Assert.Equal("user2", user.Username);
+            Assert.NotNull(result);
+            Assert.Equal(userDTO.Id, result.Id);
+            Assert.Equal(userDTO.Username, result.Username);
         }
 
         [Fact]
-        public async Task GetByUsernameAsync_ShouldReturnNull_WhenUsernameDoesNotExist()
+        public async Task DeleteUserAsync_ShouldThrowKeyNotFoundException_WhenUserDoesNotExist()
         {
+            // Arrange
+            var userId = 3;
+
+            _mockUserRepository.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync((User)null);
+
+            // Act & Assert
+            var ex = await Assert.ThrowsAsync<KeyNotFoundException>(() => _userService.DeleteUserAsync(userId));
+            Assert.Equal("User not found.", ex.Message);
+        }
+
+        [Fact]
+        public async Task GetAllUsersAsync_ShouldReturnListOfUserDTOs_WhenUsersExist()
+        {
+            // Arrange
+            _mockUserRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(_users);
+
             // Act
-            var user = await _userRepository.GetByUsernameAsync("NonExistentUser");
+            var result = await _userService.GetAllUsersAsync();
 
             // Assert
-            Assert.Null(user);
+            Assert.NotNull(result);
+            Assert.Equal(_users.Count, result.Count());
         }
     }
 }
