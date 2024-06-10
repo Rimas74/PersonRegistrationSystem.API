@@ -109,7 +109,7 @@ namespace UnitTestBusinessLogic
                     TelephoneNumber = "1234567890",
                     Email = "person1@example.com",
                     UserId = 1,
-                    ProfilePhotoPath = "path/to/photo1.jpg"
+                    ProfilePhotoPath = "mock/path/photo1.jpg"
                 },
                 new Person
                 {
@@ -122,7 +122,7 @@ namespace UnitTestBusinessLogic
                     TelephoneNumber = "0987654321",
                     Email = "person2@example.com",
                     UserId = 2,
-                    ProfilePhotoPath = "path/to/photo2.jpg"
+                    ProfilePhotoPath = "mock/path/photo1.jpg"
                 }
             };
 
