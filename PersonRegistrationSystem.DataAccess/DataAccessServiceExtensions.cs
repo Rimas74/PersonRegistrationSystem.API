@@ -23,7 +23,7 @@ namespace PersonRegistrationSystem.DataAccess
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
-            //services.AddScoped<IPlaceOfResidenceRepository, PlaceOfResidenceRepository>();
+
 
             return services;
         }
