@@ -27,6 +27,10 @@ namespace PersonRegistrationSystem.DataAccess
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Person>()
+               .HasIndex(p => p.Email)
+               .IsUnique();
+
+            modelBuilder.Entity<Person>()
                 .HasOne(p => p.PlaceOfResidence)
                 .WithOne(pr => pr.Person)
                 .HasForeignKey<PlaceOfResidence>(pr => pr.PersonId)

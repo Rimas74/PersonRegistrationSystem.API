@@ -10,6 +10,8 @@ namespace PersonRegistrationSystem.DataAccess.Interfaces
         Task<Person> GetByIdAsync(int id);
         Task<bool> PersonalCodeExistsForUserAsync(int userId, string personalCode);
         Task CreateAsync(Person person);
+        Task<bool> EmailExistsAsync(string email);
+
         Task CreatePlaceOfResidenceAsync(PlaceOfResidence placeOfResidence);
         Task UpdatePersonDetailsAsync(Person person);
         Task UpdatePlaceOfResidenceAsync(PlaceOfResidence placeOfResidence);

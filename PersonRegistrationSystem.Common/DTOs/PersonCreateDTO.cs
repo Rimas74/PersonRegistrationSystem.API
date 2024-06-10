@@ -35,11 +35,13 @@ namespace PersonRegistrationSystem.Common.DTOs
         public string PersonalCode { get; set; }
 
         [Required]
-        [Phone]
+        [RegularExpression(@"^\+370\d{8}$", ErrorMessage = "Phone number format is invalid for Lithuanian numbers.")]
         public string TelephoneNumber { get; set; }
 
         [Required]
         [EmailAddress]
+        [StringLength(50)]
+        [CustomEmailDomainValidation]
         public string Email { get; set; }
 
         [Required]

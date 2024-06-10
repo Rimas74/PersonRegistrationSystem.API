@@ -10,7 +10,7 @@ namespace PersonRegistrationSystem.DataAccess.Interfaces
         Task<User> GetByUsernameAsync(string username);
         Task AddAsync(User user);
         Task<User> GetByIdAsync(int userId);
-        Task UpdateAsync(User user);
+        //Task UpdateAsync(User user);
         Task<User> DeleteUserAsync(int userId);
     }
 }

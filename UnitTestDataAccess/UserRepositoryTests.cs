@@ -114,21 +114,21 @@ namespace UnitTestDataAccess
             Assert.Null(user);
         }
 
-        [Fact]
-        public async Task UpdateUser_ShouldUpdateUserDetails_WhenUserExists()
-        {
-            // Arrange
-            var existingUser = await _userRepository.GetByIdAsync(1);
-            existingUser.Username = "user1Updated";
+        //[Fact]
+        //public async Task UpdateUser_ShouldUpdateUserDetails_WhenUserExists()
+        //{
+        //    // Arrange
+        //    var existingUser = await _userRepository.GetByIdAsync(1);
+        //    existingUser.Username = "user1Updated";
 
-            // Act
-            await _userRepository.UpdateAsync(existingUser);
-            var updatedUser = await _userRepository.GetByIdAsync(1);
+        //    // Act
+        //    await _userRepository.UpdateAsync(existingUser);
+        //    var updatedUser = await _userRepository.GetByIdAsync(1);
 
-            // Assert
-            Assert.NotNull(updatedUser);
-            Assert.Equal("user1Updated", updatedUser.Username);
-        }
+        //    // Assert
+        //    Assert.NotNull(updatedUser);
+        //    Assert.Equal("user1Updated", updatedUser.Username);
+        //}
 
         [Fact]
         public async Task GetAllAsync_ShouldReturnAllUsers()

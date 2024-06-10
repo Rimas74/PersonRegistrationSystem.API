@@ -40,6 +40,7 @@ namespace PersonRegistrationSystem.DataAccess.Entities
 
         [Required]
         [EmailAddress]
+        [StringLength(50)]
         public string Email { get; set; }
 
         public string ProfilePhotoPath { get; set; }

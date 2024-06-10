@@ -183,6 +183,7 @@ namespace UnitTestBusinessLogic
                 }
             };
             _mockPersonRepository.Setup(repo => repo.PersonalCodeExistsForUserAsync(It.IsAny<int>(), personCreateDTO.PersonalCode)).ReturnsAsync(false);
+            _mockPersonRepository.Setup(repo => repo.EmailExistsAsync(It.IsAny<string>())).ReturnsAsync(false);
             _mockPersonRepository.Setup(repo => repo.CreateAsync(It.IsAny<Person>())).Returns(Task.CompletedTask).Callback<Person>(p => p.Id = 3);
 
             // Act
@@ -224,6 +225,39 @@ namespace UnitTestBusinessLogic
             // Assert
             var ex = await Assert.ThrowsAsync<ArgumentException>(Action);
             Assert.Equal("A person with this Personal Identification Code already exists.", ex.Message);
+        }
+
+        [Fact]
+        public async Task CreatePersonAsync_ShouldThrowArgumentException_WhenEmailExists()
+        {
+            // Arrange
+            var personCreateDTO = new PersonCreateDTO
+            {
+                Name = "User3",
+                LastName = "Test3",
+                Gender = "Female",
+                Birthday = new DateTime(1995, 5, 5),
+                PersonalCode = "34567890123",
+                TelephoneNumber = "555555555",
+                Email = "user3@test.com",
+                ProfilePhoto = null,
+                PlaceOfResidence = new PlaceOfResidenceCreateDTO
+                {
+                    City = "City3",
+                    Street = "Street3",
+                    HouseNumber = "3",
+                    ApartmentNumber = "3C"
+                }
+            };
+            _mockPersonRepository.Setup(repo => repo.PersonalCodeExistsForUserAsync(It.IsAny<int>(), personCreateDTO.PersonalCode)).ReturnsAsync(false);
+            _mockPersonRepository.Setup(repo => repo.EmailExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
+
+            // Act
+            async Task Action() => await _personService.CreatePersonAsync(1, personCreateDTO);
+
+            // Assert
+            var ex = await Assert.ThrowsAsync<ArgumentException>(Action);
+            Assert.Equal("A person with this email already exists.", ex.Message);
         }
 
         [Fact]

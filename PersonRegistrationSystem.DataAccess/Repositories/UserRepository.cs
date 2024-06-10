@@ -84,20 +84,20 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
-        public async Task UpdateAsync(User user)
-        {
-            _logger.LogInformation($"Updating user with ID: {user.Id}");
-            var userToUpdate = await GetByIdAsync(user.Id);
-            if (userToUpdate != null)
-            {
-                _context.Users.Update(user);
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"User with ID: {user.Id} updated successfully");
-            }
-            else
-            {
-                _logger.LogWarning($"User with ID: {user.Id} not found for update");
-            }
-        }
+        //public async Task UpdateAsync(User user)
+        //{
+        //    _logger.LogInformation($"Updating user with ID: {user.Id}");
+        //    var userToUpdate = await GetByIdAsync(user.Id);
+        //    if (userToUpdate != null)
+        //    {
+        //        _context.Users.Update(user);
+        //        await _context.SaveChangesAsync();
+        //        _logger.LogInformation($"User with ID: {user.Id} updated successfully");
+        //    }
+        //    else
+        //    {
+        //        _logger.LogWarning($"User with ID: {user.Id} not found for update");
+        //    }
+        //}
     }
 }

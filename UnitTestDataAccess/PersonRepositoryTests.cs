@@ -243,5 +243,24 @@ namespace UnitTestDataAccess
             // Assert
             Assert.False(exists);
         }
+        [Fact]
+        public async Task EmailExists_ShouldReturnTrue_WhenEmailExists()
+        {
+            // Act
+            var exists = await _personRepository.EmailExistsAsync("person1@example.com");
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task EmailExists_ShouldReturnFalse_WhenEmailDoesNotExist()
+        {
+            // Act
+            var exists = await _personRepository.EmailExistsAsync("nonexistent@example.com");
+
+            // Assert
+            Assert.False(exists);
+        }
     }
 }

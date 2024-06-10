@@ -29,6 +29,11 @@ public class PersonService : IPersonService
             throw new ArgumentException("A person with this Personal Identification Code already exists.");
         }
 
+        var emailExists = await _personRepository.EmailExistsAsync(personCreateDTO.Email);
+        if (emailExists)
+        {
+            throw new ArgumentException("A person with this email already exists.");
+        }
         if (!Enum.TryParse(personCreateDTO.Gender, out Gender gender))
         {
             throw new ArgumentException("Invalid gender value.");
@@ -56,6 +61,7 @@ public class PersonService : IPersonService
         _logger.LogInformation($"Person created for user ID: {userId}");
         return _mapper.Map<PersonDTO>(person);
     }
+
 
     public async Task<PersonDTO> DeletePersonAsync(int userId, int personId)
     {

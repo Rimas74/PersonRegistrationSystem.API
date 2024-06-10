@@ -31,7 +31,11 @@ public class PersonRepository : IPersonRepository
         await _context.SaveChangesAsync();
         _logger.LogInformation($"Person added for user ID: {person.UserId} to the database.");
     }
-
+    public async Task<bool> EmailExistsAsync(string email)
+    {
+        _logger.LogInformation($"From database getting person by email: {email}.");
+        return await _context.Persons.AnyAsync(p => p.Email == email);
+    }
     public async Task CreatePlaceOfResidenceAsync(PlaceOfResidence placeOfResidence)
     {
         _logger.LogInformation("Creating place of residence to the database.");
