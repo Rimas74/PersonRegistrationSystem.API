@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
+using PersonRegistrationSystem.BusinessLogic.Helpers;
 using PersonRegistrationSystem.BusinessLogic.Interfaces;
 using PersonRegistrationSystem.Common.DTOs;
 using PersonRegistrationSystem.DataAccess.Entities;
@@ -55,7 +56,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             _logger.LogInformation($"Logging in user with username: {userLoginDTO.Username}");
 
             var user = await _userRepository.GetByUsernameAsync(userLoginDTO.Username);
-            ValidateUserCredentials(user, userLoginDTO.Password);
+            ValidateUserCredentials.Validate(user, userLoginDTO.Password, _logger);
 
             var token = _tokenService.GenerateToken(user.Username, user.Role, user.Id);
 
@@ -90,23 +91,6 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
         {
             var users = await _userRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<UserDTO>>(users);
-        }
-
-        private void ValidateUserCredentials(User user, string password)
-        {
-            if (user == null)
-            {
-                _logger.LogWarning("Invalid username.");
-                throw new UnauthorizedAccessException("Invalid username.");
-            }
-
-            bool isPasswordValid = PasswordHasher.VerifyPassword(password, user.PasswordHash, user.Salt);
-
-            if (!isPasswordValid)
-            {
-                _logger.LogWarning($"Invalid password for username {user.Username}.");
-                throw new UnauthorizedAccessException("Invalid password.");
-            }
         }
     }
 }

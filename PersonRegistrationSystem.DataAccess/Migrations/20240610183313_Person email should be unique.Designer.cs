@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonRegistrationSystem.DataAccess;
 
@@ -11,9 +12,11 @@ using PersonRegistrationSystem.DataAccess;
 namespace PersonRegistrationSystem.DataAccess.Migrations
 {
     [DbContext(typeof(PersonRegistrationContext))]
-    partial class PersonRegistrationContextModelSnapshot : ModelSnapshot
+    [Migration("20240610183313_Person email should be unique")]
+    partial class Personemailshouldbeunique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
