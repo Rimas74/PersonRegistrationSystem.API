@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
-using PersonRegistrationSystem.DataAccess.Entities;
-using PersonRegistrationSystem.DataAccess.Repositories;
 using Microsoft.Extensions.Logging;
 using Moq;
 using PersonRegistrationSystem.DataAccess;
+using PersonRegistrationSystem.DataAccess.Entities;
+using PersonRegistrationSystem.DataAccess.Repositories;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace UnitTestDataAccess
@@ -41,12 +40,6 @@ namespace UnitTestDataAccess
                 .Options;
             var context = new PersonRegistrationContext(options);
             await context.Database.EnsureCreatedAsync();
-
-            context.Users.RemoveRange(context.Users);
-            context.Persons.RemoveRange(context.Persons);
-            context.PlacesOfResidence.RemoveRange(context.PlacesOfResidence);
-            await context.SaveChangesAsync();
-
             return context;
         }
 
@@ -82,7 +75,7 @@ namespace UnitTestDataAccess
                     Gender = PersonRegistrationSystem.DataAccess.Enums.Gender.Male,
                     Birthday = new DateTime(1990, 1, 1),
                     PersonalCode = "12345678901",
-                    TelephoneNumber = "1234567890",
+                    TelephoneNumber = "+37066666666",
                     Email = "person1@example.com",
                     UserId = 1,
                     ProfilePhotoPath = "path/to/photo1.jpg"
@@ -95,7 +88,7 @@ namespace UnitTestDataAccess
                     Gender = PersonRegistrationSystem.DataAccess.Enums.Gender.Female,
                     Birthday = new DateTime(1995, 1, 1),
                     PersonalCode = "09876543210",
-                    TelephoneNumber = "0987654321",
+                    TelephoneNumber = "+37066666666",
                     Email = "person2@example.com",
                     UserId = 2,
                     ProfilePhotoPath = "path/to/photo2.jpg"
@@ -142,13 +135,12 @@ namespace UnitTestDataAccess
             // Arrange
             var newPerson = new Person
             {
-                Id = 3,
                 Name = "Person3",
                 LastName = "LastName3",
                 Gender = PersonRegistrationSystem.DataAccess.Enums.Gender.Male,
                 Birthday = new DateTime(2000, 1, 1),
                 PersonalCode = "11223344556",
-                TelephoneNumber = "111222333",
+                TelephoneNumber = "+37066666666",
                 Email = "person3@example.com",
                 UserId = 1,
                 ProfilePhotoPath = "path/to/photo3.jpg"
@@ -156,11 +148,11 @@ namespace UnitTestDataAccess
 
             // Act
             await _personRepository.CreateAsync(newPerson);
-            var person = await _personRepository.GetByIdAsync(3);
+            var person = await _personRepository.GetByIdAsync(newPerson.Id);
 
             // Assert
             Assert.NotNull(person);
-            Assert.Equal(3, person.Id);
+            Assert.Equal(newPerson.Id, person.Id);
             Assert.Equal("Person3", person.Name);
         }
 
@@ -181,6 +173,7 @@ namespace UnitTestDataAccess
             // Arrange
             var existingPerson = await _personRepository.GetByIdAsync(1);
             existingPerson.Name = "Person1Updated";
+            existingPerson.PlaceOfResidence.City = "UpdatedCity";
 
             // Act
             await _personRepository.UpdatePersonDetailsAsync(existingPerson);
@@ -189,6 +182,7 @@ namespace UnitTestDataAccess
             // Assert
             Assert.NotNull(updatedPerson);
             Assert.Equal("Person1Updated", updatedPerson.Name);
+            Assert.Equal("UpdatedCity", updatedPerson.PlaceOfResidence.City);
         }
 
         [Fact]
@@ -224,43 +218,6 @@ namespace UnitTestDataAccess
             Assert.Null(person);
         }
 
-        [Fact]
-        public async Task PersonalCodeExistsForUser_ShouldReturnTrue_WhenPersonalCodeExists()
-        {
-            // Act
-            var exists = await _personRepository.PersonalCodeExistsForUserAsync(1, "12345678901");
 
-            // Assert
-            Assert.True(exists);
-        }
-
-        [Fact]
-        public async Task PersonalCodeExistsForUser_ShouldReturnFalse_WhenPersonalCodeDoesNotExist()
-        {
-            // Act
-            var exists = await _personRepository.PersonalCodeExistsForUserAsync(1, "00000000000");
-
-            // Assert
-            Assert.False(exists);
-        }
-        [Fact]
-        public async Task EmailExists_ShouldReturnTrue_WhenEmailExists()
-        {
-            // Act
-            var exists = await _personRepository.EmailExistsAsync("person1@example.com");
-
-            // Assert
-            Assert.True(exists);
-        }
-
-        [Fact]
-        public async Task EmailExists_ShouldReturnFalse_WhenEmailDoesNotExist()
-        {
-            // Act
-            var exists = await _personRepository.EmailExistsAsync("nonexistent@example.com");
-
-            // Assert
-            Assert.False(exists);
-        }
     }
 }

@@ -85,10 +85,15 @@ public class PersonRepository : IPersonRepository
     public async Task UpdatePersonDetailsAsync(Person person)
     {
         _logger.LogInformation($"Updating person details for person ID: {person.Id}");
-        _context.Persons.Update(person);
+        _context.Entry(person).State = EntityState.Modified;
+        if (person.PlaceOfResidence != null)
+        {
+            _context.Entry(person.PlaceOfResidence).State = EntityState.Modified;
+        }
         await _context.SaveChangesAsync();
         _logger.LogInformation($"Person details updated for person ID: {person.Id}");
     }
+
 
     public async Task UpdatePlaceOfResidenceAsync(PlaceOfResidence placeOfResidence)
     {
@@ -97,4 +102,5 @@ public class PersonRepository : IPersonRepository
         await _context.SaveChangesAsync();
         _logger.LogInformation($"Place of residence updated for person ID: {placeOfResidence.PersonId}");
     }
+
 }

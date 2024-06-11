@@ -6,12 +6,12 @@ namespace PersonRegistrationSystem.Common.DTOs
     {
         [Required]
         [StringLength(100, ErrorMessage = "City name is too long.")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "City name can only contain letters and spaces.")]
+        [RegularExpression(@"^[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]+(?: [a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]+)*$", ErrorMessage = "City name can only contain letters and a single space between words.")]
         public string City { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "Street name is too long.")]
-        [RegularExpression(@"^[a-zA-Z]+(?:\s[a-zA-Z]+)+$", ErrorMessage = "Street name must contain at least one space and can only contain letters and spaces.")]
+        [RegularExpression(@"^[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]+(?:\s[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]+)+$", ErrorMessage = "Street name must contain at least one space and can only contain letters and spaces.")]
         public string Street { get; set; }
 
         [Required]

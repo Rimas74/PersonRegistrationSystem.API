@@ -161,12 +161,18 @@ public class PersonService : IPersonService
             throw new ArgumentException("Invalid gender value.");
         }
 
+        if (person.PlaceOfResidence != null)
+        {
+            _mapper.Map(personUpdateDetailsDTO.PlaceOfResidence, person.PlaceOfResidence);
+        }
+
         await _personRepository.UpdatePersonDetailsAsync(person);
         await _personRepository.UpdatePlaceOfResidenceAsync(person.PlaceOfResidence);
 
         _logger.LogInformation($"Person details updated for person ID: {personId} by user ID: {userId}");
         return _mapper.Map<PersonDTO>(person);
     }
+
 
     public async Task<PersonDTO> UpdatePersonImageAsync(int userId, int personId, PersonUpdateImageDTO personUpdateImageDTO)
     {
