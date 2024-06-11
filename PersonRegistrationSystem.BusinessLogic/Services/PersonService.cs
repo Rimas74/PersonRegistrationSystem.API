@@ -62,7 +62,6 @@ public class PersonService : IPersonService
         return _mapper.Map<PersonDTO>(person);
     }
 
-
     public async Task<PersonDTO> DeletePersonAsync(int userId, int personId)
     {
         _logger.LogInformation($"Deleting person with ID: {personId} for user ID: {userId}");
