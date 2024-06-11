@@ -56,6 +56,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             _logger.LogInformation($"Logging in user with username: {userLoginDTO.Username}");
 
             var user = await _userRepository.GetByUsernameAsync(userLoginDTO.Username);
+
             ValidateUserCredentials.Validate(user, userLoginDTO.Password, _logger);
 
             var token = _tokenService.GenerateToken(user.Username, user.Role, user.Id);
