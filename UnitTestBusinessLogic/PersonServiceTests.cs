@@ -44,11 +44,11 @@ namespace UnitTestBusinessLogic
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Person, PersonDTO>().ReverseMap();
-                cfg.CreateMap<PersonCreateDTO, Person>();
-                cfg.CreateMap<PersonUpdateDetailsDTO, Person>();
-                cfg.CreateMap<PersonUpdateImageDTO, Person>();
-                cfg.CreateMap<PlaceOfResidenceCreateDTO, PlaceOfResidence>();
-                cfg.CreateMap<PlaceOfResidenceUpdateDTO, PlaceOfResidence>();
+                cfg.CreateMap<PersonCreateDTO, Person>().ReverseMap();
+                cfg.CreateMap<PersonUpdateDetailsDTO, Person>().ReverseMap();
+                cfg.CreateMap<PersonUpdateImageDTO, Person>().ReverseMap();
+                cfg.CreateMap<PlaceOfResidenceCreateDTO, PlaceOfResidence>().ReverseMap();
+                cfg.CreateMap<PlaceOfResidenceUpdateDTO, PlaceOfResidence>().ReverseMap();
                 cfg.CreateMap<PlaceOfResidence, PlaceOfResidenceDTO>().ReverseMap();
             });
 
