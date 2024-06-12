@@ -16,13 +16,13 @@ namespace PersonRegistrationSystem.DataAccess.Helpers
             var passwordHash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
             return (passwordHash, salt);
         }
-        public static bool VerifyPassword(string password, string storedHash, string storedSalt)
-        {
-            var saltBytes = Convert.FromBase64String(storedSalt);
-            using var hmac = new HMACSHA512(saltBytes);
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            var storedHashBytes = Convert.FromBase64String(storedHash);
-            return computedHash.SequenceEqual(storedHashBytes);
-        }
+        //public static bool VerifyPassword(string password, string storedHash, string storedSalt)
+        //{
+        //    var saltBytes = Convert.FromBase64String(storedSalt);
+        //    using var hmac = new HMACSHA512(saltBytes);
+        //    var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+        //    var storedHashBytes = Convert.FromBase64String(storedHash);
+        //    return computedHash.SequenceEqual(storedHashBytes);
+        //}
     }
 }

@@ -6,6 +6,7 @@ using PersonRegistrationSystem.Common.DTOs;
 using PersonRegistrationSystem.DataAccess.Entities;
 using PersonRegistrationSystem.DataAccess.Helpers;
 using PersonRegistrationSystem.DataAccess.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -57,7 +58,11 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
 
             var user = await _userRepository.GetByUsernameAsync(userLoginDTO.Username);
 
-            ValidateUserCredentials.Validate(user, userLoginDTO.Password, _logger);
+            if (user == null || !PasswordVerifier.VerifyPassword(userLoginDTO.Password, user.PasswordHash, user.Salt))
+            {
+                _logger.LogWarning($"Invalid login attempt for username: {userLoginDTO.Username}");
+                throw new UnauthorizedAccessException("Invalid username or password.");
+            }
 
             var token = _tokenService.GenerateToken(user.Username, user.Role, user.Id);
 

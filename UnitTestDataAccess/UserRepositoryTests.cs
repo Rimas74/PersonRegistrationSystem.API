@@ -15,15 +15,11 @@ namespace UnitTestDataAccess
 {
     public class UserRepositoryTests : IAsyncLifetime
     {
-        private readonly ITestOutputHelper _output;
+
         private PersonRegistrationContext _context;
         private UserRepository _userRepository;
         private Mock<ILogger<UserRepository>> _mockLogger;
 
-        public UserRepositoryTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         public async Task InitializeAsync()
         {

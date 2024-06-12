@@ -23,17 +23,14 @@ namespace UnitTestBusinessLogic
 {
     public class PersonServiceTests : IAsyncLifetime
     {
-        private readonly ITestOutputHelper _output;
+
         private PersonRegistrationContext _context;
         private PersonService _personService;
         private Mock<IPersonRepository> _mockPersonRepository;
         private IMapper _mapper;
         private Mock<ILogger<PersonService>> _mockLogger;
 
-        public PersonServiceTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
+
 
         public async Task InitializeAsync()
         {

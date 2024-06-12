@@ -15,7 +15,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Helpers
                 throw new UnauthorizedAccessException("Invalid username.");
             }
 
-            bool isPasswordValid = PasswordHasher.VerifyPassword(password, user.PasswordHash, user.Salt);
+            bool isPasswordValid = PasswordVerifier.VerifyPassword(password, user.PasswordHash, user.Salt);
 
             if (!isPasswordValid)
             {

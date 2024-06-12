@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using PersonRegistrationSystem.BusinessLogic.Helpers;
 using PersonRegistrationSystem.BusinessLogic.Interfaces;
 using PersonRegistrationSystem.BusinessLogic.Services;
 using PersonRegistrationSystem.Common.DTOs;
@@ -172,7 +173,7 @@ namespace UnitTestBusinessLogic
 
             // Act & Assert
             var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _userService.LoginUserAsync(userLoginDTO));
-            Assert.Equal("Invalid password.", ex.Message);
+            Assert.Equal("Invalid username or password.", ex.Message);
         }
 
         [Fact]
@@ -185,7 +186,7 @@ namespace UnitTestBusinessLogic
 
             // Act & Assert
             var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _userService.LoginUserAsync(userLoginDTO));
-            Assert.Equal("Invalid username.", ex.Message);
+            Assert.Equal("Invalid username or password.", ex.Message);
         }
 
         [Fact]

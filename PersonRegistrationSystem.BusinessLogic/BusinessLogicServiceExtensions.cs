@@ -15,7 +15,6 @@ namespace PersonRegistrationSystem.BusinessLogic
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPersonService, PersonService>();
-
             services.AddScoped<ITokenService, TokenService>();
             return services;
         }
