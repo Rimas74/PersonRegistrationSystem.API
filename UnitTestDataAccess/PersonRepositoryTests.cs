@@ -217,7 +217,5 @@ namespace UnitTestDataAccess
             // Assert
             Assert.Null(person);
         }
-
-
     }
 }
