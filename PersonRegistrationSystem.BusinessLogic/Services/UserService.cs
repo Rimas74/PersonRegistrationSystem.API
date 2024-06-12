@@ -83,7 +83,7 @@ namespace PersonRegistrationSystem.BusinessLogic.Services
             }
 
             var deletedUser = await _userRepository.DeleteUserAsync(userId);
-            _logger.LogInformation($"User with ID: {userId} has been removed from the database.");
+            _logger.LogInformation($"User with ID: {userId} has been removed.");
 
             return _mapper.Map<UserDTO>(deletedUser);
         }

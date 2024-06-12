@@ -49,19 +49,33 @@ public class PersonRepository : IPersonRepository
         var person = await _context.Persons.FindAsync(id);
         if (person != null)
         {
+
             var placeOfResidence = await _context.PlacesOfResidence.FirstOrDefaultAsync(pr => pr.PersonId == person.Id);
             if (placeOfResidence != null)
             {
                 _context.PlacesOfResidence.Remove(placeOfResidence);
+                _logger.LogInformation($"Place of residence with ID: {placeOfResidence.Id} for person ID: {id} has been removed.");
+            }
+
+
+            if (!string.IsNullOrEmpty(person.ProfilePhotoPath) && File.Exists(person.ProfilePhotoPath))
+            {
+                File.Delete(person.ProfilePhotoPath);
+                _logger.LogInformation($"Profile photo at path: {person.ProfilePhotoPath} for person ID: {id} has been deleted.");
+            }
+            else
+            {
+                _logger.LogInformation($"No profile photo found or file does not exist for person ID: {id}.");
             }
 
             _context.Persons.Remove(person);
             await _context.SaveChangesAsync();
 
-            if (!string.IsNullOrEmpty(person.ProfilePhotoPath) && File.Exists(person.ProfilePhotoPath))
-            {
-                File.Delete(person.ProfilePhotoPath);
-            }
+            _logger.LogInformation($"Person with ID: {person.Id} and related data has been removed from the database.");
+        }
+        else
+        {
+            _logger.LogWarning($"Person with ID: {id} not found in the database.");
         }
     }
 
@@ -85,10 +99,10 @@ public class PersonRepository : IPersonRepository
     public async Task UpdatePersonDetailsAsync(Person person)
     {
         _logger.LogInformation($"Updating person details for person ID: {person.Id}");
-        _context.Entry(person).State = EntityState.Modified;
+        _context.Update(person);  //might be more accurateopyion:  _context.Entry(person).State = EntityState.Modified
         if (person.PlaceOfResidence != null)
         {
-            _context.Entry(person.PlaceOfResidence).State = EntityState.Modified;
+            await UpdatePlaceOfResidenceAsync(person.PlaceOfResidence);
         }
         await _context.SaveChangesAsync();
         _logger.LogInformation($"Person details updated for person ID: {person.Id}");

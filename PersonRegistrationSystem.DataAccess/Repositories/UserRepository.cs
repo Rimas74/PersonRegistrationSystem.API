@@ -31,7 +31,6 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
         {
             var user = await _context.Users
                 .Include(u => u.Persons)
-                .ThenInclude(p => p.PlaceOfResidence)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
@@ -39,30 +38,13 @@ namespace PersonRegistrationSystem.DataAccess.Repositories
                 throw new KeyNotFoundException("User not found.");
             }
 
-            foreach (var person in user.Persons)
-            {
-                _logger.LogInformation($"Deleting person with ID: {person.Id} for user ID: {userId}");
-
-                if (!string.IsNullOrEmpty(person.ProfilePhotoPath) && File.Exists(person.ProfilePhotoPath))
-                {
-                    File.Delete(person.ProfilePhotoPath);
-                }
-
-                var placeOfResidence = await _context.PlacesOfResidence.FirstOrDefaultAsync(p => p.PersonId == person.Id);
-                if (placeOfResidence != null)
-                {
-                    _context.PlacesOfResidence.Remove(placeOfResidence);
-                }
-
-                _context.Persons.Remove(person);
-                _logger.LogInformation($"Person with ID: {person.Id} has been removed from the database.");
-            }
-
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation($"User with ID: {userId} has been removed from the database.");
             return user;
         }
+
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
