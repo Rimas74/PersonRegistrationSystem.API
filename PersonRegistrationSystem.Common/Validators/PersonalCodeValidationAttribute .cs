@@ -105,7 +105,7 @@ namespace PersonRegistrationSystem.Common.Validators
         private bool IsValidGender(string code, string gender, ILogger logger)
         {
             int firstDigit = int.Parse(code[0].ToString());
-            bool isValidGender = (gender == "Male" && (firstDigit == 3 || firstDigit == 5)) || (gender == "Female" && (firstDigit == 2 || firstDigit == 4));
+            bool isValidGender = (gender == "Male" && (firstDigit == 1 || firstDigit == 3 || firstDigit == 5)) || (gender == "Female" && (firstDigit == 2 || firstDigit == 4 || firstDigit == 6));
             if (!isValidGender)
             {
                 logger.LogWarning($"Gender {gender} does not match personal code first digit {firstDigit}.");
