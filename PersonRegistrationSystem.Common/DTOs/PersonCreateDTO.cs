@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PersonRegistrationSystem.Common.Validators;
-using PersonRegistrationSystem.DataAccess.Helpers;
+
 
 namespace PersonRegistrationSystem.Common.DTOs
 {
@@ -31,7 +31,7 @@ namespace PersonRegistrationSystem.Common.DTOs
         public DateTime Birthday { get; set; }
 
         [Required]
-        [PersonalCodeValidation]
+        [PersonalCodeValidation(GenderProperty = "Gender", BirthdayProperty = "Birthday")]
         public string PersonalCode { get; set; }
 
         [Required]

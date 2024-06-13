@@ -20,7 +20,6 @@ namespace PersonRegistrationSystem.DataAccess
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
              sqlOptions => sqlOptions.MigrationsAssembly("PersonRegistrationSystem.DataAccess")));
 
-
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
 

@@ -5,6 +5,9 @@ using PersonRegistrationSystem.Common.DTOs;
 using PersonRegistrationSystem.DataAccess.Entities;
 using PersonRegistrationSystem.DataAccess.Enums;
 using PersonRegistrationSystem.DataAccess.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class PersonService : IPersonService
 {
@@ -172,7 +175,6 @@ public class PersonService : IPersonService
         return _mapper.Map<PersonDTO>(person);
     }
 
-
     public async Task<PersonDTO> UpdatePersonImageAsync(int userId, int personId, PersonUpdateImageDTO personUpdateImageDTO)
     {
         _logger.LogInformation($"Updating person image for person ID: {personId} by user ID: {userId}");
@@ -201,5 +203,4 @@ public class PersonService : IPersonService
         _logger.LogInformation($"Person image updated for person ID: {personId} by user ID: {userId}");
         return _mapper.Map<PersonDTO>(person);
     }
-
 }

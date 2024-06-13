@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PersonRegistrationSystem.BusinessLogic;
 using PersonRegistrationSystem.DataAccess;
+using PersonRegistrationSystem.Common;
 using Serilog;
 using System.Text;
 
@@ -48,6 +49,7 @@ namespace PersonRegistrationSystem.API
 
             builder.Services.AddDataAccessServices(builder.Configuration);
             builder.Services.AddBusinessLogicServices();
+            builder.Services.AddCommonServices();
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
